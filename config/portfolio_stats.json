@@ -1,0 +1,1814 @@
+[
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "German Bundesliga 2",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 4.1
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 101,
+    "wins": 89,
+    "sr": 88.12,
+    "pl": 38.3,
+    "roi": 37.94,
+    "avg_odds": 5.163,
+    "max_dd": -6.5,
+    "hist_roi": 37.9,
+    "seasons": {
+      "2021-2022": {
+        "n": 22,
+        "pl": 21.56,
+        "roi": 98.0,
+        "sr": 100.0
+      },
+      "2022-2023": {
+        "n": 16,
+        "pl": -2.04,
+        "roi": -12.75,
+        "sr": 75.0
+      },
+      "2023-2024": {
+        "n": 29,
+        "pl": 12.18,
+        "roi": 42.0,
+        "sr": 89.7
+      },
+      "2024-2025": {
+        "n": 22,
+        "pl": 5.82,
+        "roi": 26.45,
+        "sr": 86.4
+      },
+      "2025-2026": {
+        "n": 12,
+        "pl": 0.8,
+        "roi": 6.67,
+        "sr": 83.3
+      }
+    },
+    "bets_per_season": 20.2
+  },
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "Danish Superligaen",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.65
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 121,
+    "wins": 104,
+    "sr": 85.95,
+    "pl": 43.1,
+    "roi": 35.64,
+    "avg_odds": 4.854,
+    "max_dd": -14.5,
+    "hist_roi": 35.6,
+    "seasons": {
+      "2021-2022": {
+        "n": 18,
+        "pl": 0.42,
+        "roi": 2.33,
+        "sr": 77.8
+      },
+      "2022-2023": {
+        "n": 22,
+        "pl": 8.97,
+        "roi": 40.77,
+        "sr": 86.4
+      },
+      "2023-2024": {
+        "n": 26,
+        "pl": 13.14,
+        "roi": 50.54,
+        "sr": 88.5
+      },
+      "2024-2025": {
+        "n": 38,
+        "pl": 3.93,
+        "roi": 10.34,
+        "sr": 81.6
+      },
+      "2025-2026": {
+        "n": 17,
+        "pl": 16.66,
+        "roi": 98.0,
+        "sr": 100.0
+      }
+    },
+    "bets_per_season": 24.2
+  },
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "Belgian Premier League",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.75
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 159,
+    "wins": 135,
+    "sr": 84.91,
+    "pl": 40.6,
+    "roi": 25.53,
+    "avg_odds": 4.998,
+    "max_dd": -13.2,
+    "hist_roi": 25.5,
+    "seasons": {
+      "2021-2022": {
+        "n": 33,
+        "pl": -7.05,
+        "roi": -21.36,
+        "sr": 75.8
+      },
+      "2022-2023": {
+        "n": 47,
+        "pl": 28.34,
+        "roi": 60.3,
+        "sr": 91.5
+      },
+      "2023-2024": {
+        "n": 28,
+        "pl": 2.24,
+        "roi": 8.0,
+        "sr": 82.1
+      },
+      "2024-2025": {
+        "n": 30,
+        "pl": 6.65,
+        "roi": 22.17,
+        "sr": 83.3
+      },
+      "2025-2026": {
+        "n": 21,
+        "pl": 10.42,
+        "roi": 49.62,
+        "sr": 90.5
+      }
+    },
+    "bets_per_season": 31.8
+  },
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "Scottish Premiership",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.25
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 172,
+    "wins": 137,
+    "sr": 79.65,
+    "pl": 27.7,
+    "roi": 16.09,
+    "avg_odds": 4.274,
+    "max_dd": -13.0,
+    "hist_roi": 16.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 31,
+        "pl": 7.63,
+        "roi": 24.61,
+        "sr": 77.4
+      },
+      "2022-2023": {
+        "n": 41,
+        "pl": 7.79,
+        "roi": 19.0,
+        "sr": 80.5
+      },
+      "2023-2024": {
+        "n": 27,
+        "pl": -4.13,
+        "roi": -15.3,
+        "sr": 70.4
+      },
+      "2024-2025": {
+        "n": 48,
+        "pl": 10.7,
+        "roi": 22.29,
+        "sr": 83.3
+      },
+      "2025-2026": {
+        "n": 25,
+        "pl": 5.68,
+        "roi": 22.72,
+        "sr": 84.0
+      }
+    },
+    "bets_per_season": 34.4
+  },
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "French Ligue 1",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 4.05
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 103,
+    "wins": 83,
+    "sr": 80.58,
+    "pl": 12.4,
+    "roi": 12.08,
+    "avg_odds": 4.691,
+    "max_dd": -21.0,
+    "hist_roi": 12.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 18,
+        "pl": 6.78,
+        "roi": 37.67,
+        "sr": 88.9
+      },
+      "2022-2023": {
+        "n": 27,
+        "pl": 1.86,
+        "roi": 6.89,
+        "sr": 81.5
+      },
+      "2023-2024": {
+        "n": 15,
+        "pl": 5.24,
+        "roi": 34.93,
+        "sr": 86.7
+      },
+      "2024-2025": {
+        "n": 23,
+        "pl": 18.56,
+        "roi": 80.7,
+        "sr": 95.7
+      },
+      "2025-2026": {
+        "n": 20,
+        "pl": -20.0,
+        "roi": -100.0,
+        "sr": 50.0
+      }
+    },
+    "bets_per_season": 20.6
+  },
+  {
+    "system": "Lay U1.5",
+    "system_key": "Lay_U15",
+    "league": "Swedish Allsvenskan",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.2
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 473,
+    "wins": 379,
+    "sr": 80.13,
+    "pl": 56.6,
+    "roi": 11.97,
+    "avg_odds": 4.568,
+    "max_dd": -25.2,
+    "hist_roi": 12.0,
+    "seasons": {
+      "2022": {
+        "n": 107,
+        "pl": 32.42,
+        "roi": 30.3,
+        "sr": 83.2
+      },
+      "2023": {
+        "n": 116,
+        "pl": 3.48,
+        "roi": 3.0,
+        "sr": 76.7
+      },
+      "2024": {
+        "n": 135,
+        "pl": 15.6,
+        "roi": 11.56,
+        "sr": 81.5
+      },
+      "2025": {
+        "n": 115,
+        "pl": 5.14,
+        "roi": 4.47,
+        "sr": 79.1
+      }
+    },
+    "bets_per_season": 94.6
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "English Championship",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 4.25
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 107,
+    "wins": 68,
+    "sr": 63.55,
+    "pl": 19.5,
+    "roi": 18.2,
+    "avg_odds": 1.921,
+    "max_dd": -8.7,
+    "hist_roi": 18.2,
+    "seasons": {
+      "2021-2022": {
+        "n": 25,
+        "pl": 9.1,
+        "roi": 36.4,
+        "sr": 72.0
+      },
+      "2022-2023": {
+        "n": 14,
+        "pl": -6.66,
+        "roi": -47.57,
+        "sr": 28.6
+      },
+      "2023-2024": {
+        "n": 32,
+        "pl": 10.24,
+        "roi": 32.0,
+        "sr": 75.0
+      },
+      "2024-2025": {
+        "n": 23,
+        "pl": 2.26,
+        "roi": 9.83,
+        "sr": 56.5
+      },
+      "2025-2026": {
+        "n": 13,
+        "pl": 4.53,
+        "roi": 34.85,
+        "sr": 69.2
+      }
+    },
+    "bets_per_season": 21.4
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "Spanish Primera Division",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.7
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 153,
+    "wins": 95,
+    "sr": 62.09,
+    "pl": 21.4,
+    "roi": 13.96,
+    "avg_odds": 1.87,
+    "max_dd": -8.3,
+    "hist_roi": 14.0,
+    "seasons": {
+      "2021-2022": {
+        "n": 42,
+        "pl": 6.38,
+        "roi": 15.19,
+        "sr": 61.9
+      },
+      "2022-2023": {
+        "n": 26,
+        "pl": 7.65,
+        "roi": 29.42,
+        "sr": 69.2
+      },
+      "2023-2024": {
+        "n": 28,
+        "pl": -2.95,
+        "roi": -10.54,
+        "sr": 50.0
+      },
+      "2024-2025": {
+        "n": 32,
+        "pl": 9.41,
+        "roi": 29.41,
+        "sr": 71.9
+      },
+      "2025-2026": {
+        "n": 25,
+        "pl": 0.87,
+        "roi": 3.48,
+        "sr": 56.0
+      }
+    },
+    "bets_per_season": 30.6
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "Portuguese Primeira Liga",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.55
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 182,
+    "wins": 112,
+    "sr": 61.54,
+    "pl": 22.9,
+    "roi": 12.6,
+    "avg_odds": 1.876,
+    "max_dd": -10.5,
+    "hist_roi": 12.6,
+    "seasons": {
+      "2021-2022": {
+        "n": 43,
+        "pl": 8.66,
+        "roi": 20.14,
+        "sr": 65.1
+      },
+      "2022-2023": {
+        "n": 36,
+        "pl": -1.33,
+        "roi": -3.69,
+        "sr": 52.8
+      },
+      "2023-2024": {
+        "n": 45,
+        "pl": 5.65,
+        "roi": 12.56,
+        "sr": 62.2
+      },
+      "2024-2025": {
+        "n": 30,
+        "pl": 0.63,
+        "roi": 2.1,
+        "sr": 56.7
+      },
+      "2025-2026": {
+        "n": 28,
+        "pl": 9.32,
+        "roi": 33.29,
+        "sr": 71.4
+      }
+    },
+    "bets_per_season": 36.4
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "English Premier League",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 4.3
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 106,
+    "wins": 71,
+    "sr": 66.98,
+    "pl": 13.0,
+    "roi": 12.25,
+    "avg_odds": 1.704,
+    "max_dd": -6.2,
+    "hist_roi": 12.3,
+    "seasons": {
+      "2021-2022": {
+        "n": 21,
+        "pl": 3.88,
+        "roi": 18.48,
+        "sr": 66.7
+      },
+      "2022-2023": {
+        "n": 18,
+        "pl": 3.18,
+        "roi": 17.67,
+        "sr": 72.2
+      },
+      "2023-2024": {
+        "n": 22,
+        "pl": 2.67,
+        "roi": 12.14,
+        "sr": 68.2
+      },
+      "2024-2025": {
+        "n": 20,
+        "pl": 6.49,
+        "roi": 32.45,
+        "sr": 80.0
+      },
+      "2025-2026": {
+        "n": 25,
+        "pl": -3.23,
+        "roi": -12.92,
+        "sr": 52.0
+      }
+    },
+    "bets_per_season": 21.2
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "Polish Ekstraklasa",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.95
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 124,
+    "wins": 75,
+    "sr": 60.48,
+    "pl": 14.8,
+    "roi": 11.91,
+    "avg_odds": 1.88,
+    "max_dd": -4.6,
+    "hist_roi": 11.9,
+    "seasons": {
+      "2021-2022": {
+        "n": 19,
+        "pl": 0.38,
+        "roi": 2.0,
+        "sr": 52.6
+      },
+      "2022-2023": {
+        "n": 20,
+        "pl": 0.37,
+        "roi": 1.85,
+        "sr": 55.0
+      },
+      "2023-2024": {
+        "n": 29,
+        "pl": 5.61,
+        "roi": 19.34,
+        "sr": 62.1
+      },
+      "2024-2025": {
+        "n": 29,
+        "pl": 2.55,
+        "roi": 8.79,
+        "sr": 58.6
+      },
+      "2025-2026": {
+        "n": 27,
+        "pl": 5.86,
+        "roi": 21.7,
+        "sr": 70.4
+      }
+    },
+    "bets_per_season": 24.8
+  },
+  {
+    "system": "Back O2.5",
+    "system_key": "Back_O25",
+    "league": "Norwegian Tippeligaen",
+    "bet_type": "BACK",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.6
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.5,
+    "odds_max": 2.5,
+    "n": 150,
+    "wins": 100,
+    "sr": 66.67,
+    "pl": 15.8,
+    "roi": 10.55,
+    "avg_odds": 1.684,
+    "max_dd": -9.0,
+    "hist_roi": 10.6,
+    "seasons": {
+      "2022": {
+        "n": 46,
+        "pl": 9.56,
+        "roi": 20.78,
+        "sr": 71.7
+      },
+      "2023": {
+        "n": 41,
+        "pl": 2.39,
+        "roi": 5.83,
+        "sr": 63.4
+      },
+      "2024": {
+        "n": 34,
+        "pl": 1.87,
+        "roi": 5.5,
+        "sr": 64.7
+      },
+      "2025": {
+        "n": 29,
+        "pl": 2.0,
+        "roi": 6.9,
+        "sr": 65.5
+      }
+    },
+    "bets_per_season": 30.0
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Spanish Primera Division",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 1.5
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 154,
+    "wins": 124,
+    "sr": 80.52,
+    "pl": 24.9,
+    "roi": 16.15,
+    "avg_odds": 4.505,
+    "max_dd": -10.6,
+    "hist_roi": 16.2,
+    "seasons": {
+      "2021-2022": {
+        "n": 44,
+        "pl": 4.01,
+        "roi": 9.11,
+        "sr": 79.5
+      },
+      "2022-2023": {
+        "n": 37,
+        "pl": 15.86,
+        "roi": 42.86,
+        "sr": 86.5
+      },
+      "2023-2024": {
+        "n": 32,
+        "pl": 1.79,
+        "roi": 5.59,
+        "sr": 75.0
+      },
+      "2024-2025": {
+        "n": 19,
+        "pl": 3.47,
+        "roi": 18.26,
+        "sr": 78.9
+      },
+      "2025-2026": {
+        "n": 22,
+        "pl": -0.26,
+        "roi": -1.18,
+        "sr": 81.8
+      }
+    },
+    "bets_per_season": 30.8
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "German Bundesliga 2",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 2.0
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 192,
+    "wins": 142,
+    "sr": 73.96,
+    "pl": 31.0,
+    "roi": 16.13,
+    "avg_odds": 3.299,
+    "max_dd": -15.3,
+    "hist_roi": 16.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 47,
+        "pl": 2.56,
+        "roi": 5.45,
+        "sr": 72.3
+      },
+      "2022-2023": {
+        "n": 47,
+        "pl": 14.66,
+        "roi": 31.19,
+        "sr": 80.9
+      },
+      "2023-2024": {
+        "n": 21,
+        "pl": -9.24,
+        "roi": -44.0,
+        "sr": 52.4
+      },
+      "2024-2025": {
+        "n": 46,
+        "pl": 5.14,
+        "roi": 11.17,
+        "sr": 69.6
+      },
+      "2025-2026": {
+        "n": 31,
+        "pl": 17.84,
+        "roi": 57.55,
+        "sr": 87.1
+      }
+    },
+    "bets_per_season": 38.4
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Belgian Premier League",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 2.0
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 302,
+    "wins": 226,
+    "sr": 74.83,
+    "pl": 46.0,
+    "roi": 15.23,
+    "avg_odds": 3.501,
+    "max_dd": -16.0,
+    "hist_roi": 15.2,
+    "seasons": {
+      "2021-2022": {
+        "n": 51,
+        "pl": 3.92,
+        "roi": 7.69,
+        "sr": 74.5
+      },
+      "2022-2023": {
+        "n": 55,
+        "pl": 12.6,
+        "roi": 22.91,
+        "sr": 76.4
+      },
+      "2023-2024": {
+        "n": 55,
+        "pl": -0.2,
+        "roi": -0.36,
+        "sr": 69.1
+      },
+      "2024-2025": {
+        "n": 82,
+        "pl": 13.13,
+        "roi": 16.01,
+        "sr": 74.4
+      },
+      "2025-2026": {
+        "n": 59,
+        "pl": 16.55,
+        "roi": 28.05,
+        "sr": 79.7
+      }
+    },
+    "bets_per_season": 60.4
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Spanish Segunda Division",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.6
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 159,
+    "wins": 123,
+    "sr": 77.36,
+    "pl": 23.2,
+    "roi": 14.62,
+    "avg_odds": 4.076,
+    "max_dd": -14.5,
+    "hist_roi": 14.6,
+    "seasons": {
+      "2021-2022": {
+        "n": 26,
+        "pl": 5.17,
+        "roi": 19.88,
+        "sr": 76.9
+      },
+      "2022-2023": {
+        "n": 13,
+        "pl": 12.74,
+        "roi": 98.0,
+        "sr": 100.0
+      },
+      "2023-2024": {
+        "n": 35,
+        "pl": 6.82,
+        "roi": 19.49,
+        "sr": 82.9
+      },
+      "2024-2025": {
+        "n": 46,
+        "pl": 3.11,
+        "roi": 6.76,
+        "sr": 73.9
+      },
+      "2025-2026": {
+        "n": 39,
+        "pl": -4.6,
+        "roi": -11.79,
+        "sr": 69.2
+      }
+    },
+    "bets_per_season": 31.8
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Austrian Bundesliga",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.35
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 521,
+    "wins": 373,
+    "sr": 71.59,
+    "pl": 65.5,
+    "roi": 12.58,
+    "avg_odds": 3.188,
+    "max_dd": -21.2,
+    "hist_roi": 12.6,
+    "seasons": {
+      "2021-2022": {
+        "n": 124,
+        "pl": 20.28,
+        "roi": 16.35,
+        "sr": 69.4
+      },
+      "2022-2023": {
+        "n": 121,
+        "pl": -3.71,
+        "roi": -3.07,
+        "sr": 64.5
+      },
+      "2023-2024": {
+        "n": 92,
+        "pl": 8.58,
+        "roi": 9.33,
+        "sr": 71.7
+      },
+      "2024-2025": {
+        "n": 118,
+        "pl": 16.23,
+        "roi": 13.75,
+        "sr": 74.6
+      },
+      "2025-2026": {
+        "n": 66,
+        "pl": 24.14,
+        "roi": 36.58,
+        "sr": 83.3
+      }
+    },
+    "bets_per_season": 104.2
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Irish Premier League",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 2.85
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 452,
+    "wins": 357,
+    "sr": 78.98,
+    "pl": 52.6,
+    "roi": 11.64,
+    "avg_odds": 4.28,
+    "max_dd": -21.8,
+    "hist_roi": 11.6,
+    "seasons": {
+      "2022": {
+        "n": 114,
+        "pl": -6.63,
+        "roi": -5.82,
+        "sr": 74.6
+      },
+      "2023": {
+        "n": 107,
+        "pl": 14.42,
+        "roi": 13.48,
+        "sr": 78.5
+      },
+      "2024": {
+        "n": 112,
+        "pl": 27.52,
+        "roi": 24.57,
+        "sr": 82.1
+      },
+      "2025": {
+        "n": 106,
+        "pl": 16.52,
+        "roi": 15.58,
+        "sr": 81.1
+      },
+      "2026": {
+        "n": 13,
+        "pl": 0.8,
+        "roi": 6.15,
+        "sr": 76.9
+      }
+    },
+    "bets_per_season": 90.4
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "English Championship",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 3.85
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 217,
+    "wins": 160,
+    "sr": 73.73,
+    "pl": 25.0,
+    "roi": 11.53,
+    "avg_odds": 3.575,
+    "max_dd": -20.4,
+    "hist_roi": 11.5,
+    "seasons": {
+      "2021-2022": {
+        "n": 49,
+        "pl": -4.55,
+        "roi": -9.29,
+        "sr": 69.4
+      },
+      "2022-2023": {
+        "n": 31,
+        "pl": 11.72,
+        "roi": 37.81,
+        "sr": 83.9
+      },
+      "2023-2024": {
+        "n": 61,
+        "pl": 0.57,
+        "roi": 0.93,
+        "sr": 67.2
+      },
+      "2024-2025": {
+        "n": 40,
+        "pl": 9.65,
+        "roi": 24.13,
+        "sr": 77.5
+      },
+      "2025-2026": {
+        "n": 36,
+        "pl": 7.64,
+        "roi": 21.22,
+        "sr": 77.8
+      }
+    },
+    "bets_per_season": 43.4
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Dutch Eerste Divisie",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 4.7
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 124,
+    "wins": 76,
+    "sr": 61.29,
+    "pl": 13.6,
+    "roi": 10.98,
+    "avg_odds": 2.339,
+    "max_dd": -9.3,
+    "hist_roi": 11.0,
+    "seasons": {
+      "2021-2022": {
+        "n": 26,
+        "pl": 4.5,
+        "roi": 17.31,
+        "sr": 65.4
+      },
+      "2022-2023": {
+        "n": 29,
+        "pl": 4.92,
+        "roi": 16.97,
+        "sr": 62.1
+      },
+      "2023-2024": {
+        "n": 27,
+        "pl": 5.71,
+        "roi": 21.15,
+        "sr": 66.7
+      },
+      "2024-2025": {
+        "n": 21,
+        "pl": -6.84,
+        "roi": -32.57,
+        "sr": 42.9
+      },
+      "2025-2026": {
+        "n": 21,
+        "pl": 5.33,
+        "roi": 25.38,
+        "sr": 66.7
+      }
+    },
+    "bets_per_season": 24.8
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Dutch Eredivisie",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 2.05
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 253,
+    "wins": 184,
+    "sr": 72.73,
+    "pl": 26.4,
+    "roi": 10.42,
+    "avg_odds": 3.381,
+    "max_dd": -23.3,
+    "hist_roi": 10.4,
+    "seasons": {
+      "2021-2022": {
+        "n": 78,
+        "pl": 16.41,
+        "roi": 21.04,
+        "sr": 76.9
+      },
+      "2022-2023": {
+        "n": 56,
+        "pl": 1.95,
+        "roi": 3.48,
+        "sr": 71.4
+      },
+      "2023-2024": {
+        "n": 41,
+        "pl": 2.36,
+        "roi": 5.76,
+        "sr": 68.3
+      },
+      "2024-2025": {
+        "n": 50,
+        "pl": 3.91,
+        "roi": 7.82,
+        "sr": 74.0
+      },
+      "2025-2026": {
+        "n": 28,
+        "pl": 1.73,
+        "roi": 6.18,
+        "sr": 67.9
+      }
+    },
+    "bets_per_season": 50.6
+  },
+  {
+    "system": "Lay O3.5",
+    "system_key": "Lay_O35",
+    "league": "Italian Serie A",
+    "bet_type": "LAY",
+    "xg_col": "G6_MatchxG",
+    "xg_rules": [
+      {
+        "op": "<",
+        "thresh": 1.4
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 116,
+    "wins": 90,
+    "sr": 77.59,
+    "pl": 11.7,
+    "roi": 10.09,
+    "avg_odds": 4.262,
+    "max_dd": -12.2,
+    "hist_roi": 10.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 26,
+        "pl": 9.71,
+        "roi": 37.35,
+        "sr": 80.8
+      },
+      "2022-2023": {
+        "n": 28,
+        "pl": 2.01,
+        "roi": 7.18,
+        "sr": 78.6
+      },
+      "2023-2024": {
+        "n": 17,
+        "pl": 0.52,
+        "roi": 3.06,
+        "sr": 76.5
+      },
+      "2024-2025": {
+        "n": 26,
+        "pl": 6.08,
+        "roi": 23.38,
+        "sr": 80.8
+      },
+      "2025-2026": {
+        "n": 19,
+        "pl": -6.62,
+        "roi": -34.84,
+        "sr": 68.4
+      }
+    },
+    "bets_per_season": 23.2
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Polish Ekstraklasa",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 1.9
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 171,
+    "wins": 138,
+    "sr": 80.7,
+    "pl": 59.5,
+    "roi": 34.8,
+    "avg_odds": 3.604,
+    "max_dd": -8.4,
+    "hist_roi": 34.8,
+    "seasons": {
+      "2021-2022": {
+        "n": 21,
+        "pl": 4.4,
+        "roi": 20.95,
+        "sr": 76.2
+      },
+      "2022-2023": {
+        "n": 32,
+        "pl": 12.11,
+        "roi": 37.84,
+        "sr": 81.2
+      },
+      "2023-2024": {
+        "n": 45,
+        "pl": 7.13,
+        "roi": 15.84,
+        "sr": 73.3
+      },
+      "2024-2025": {
+        "n": 43,
+        "pl": 6.47,
+        "roi": 15.05,
+        "sr": 76.7
+      },
+      "2025-2026": {
+        "n": 30,
+        "pl": 29.4,
+        "roi": 98.0,
+        "sr": 100.0
+      }
+    },
+    "bets_per_season": 34.2
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Belgian Premier League",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 1.95
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 203,
+    "wins": 168,
+    "sr": 82.76,
+    "pl": 59.6,
+    "roi": 29.38,
+    "avg_odds": 4.064,
+    "max_dd": -11.1,
+    "hist_roi": 29.4,
+    "seasons": {
+      "2021-2022": {
+        "n": 43,
+        "pl": 17.21,
+        "roi": 40.02,
+        "sr": 86.0
+      },
+      "2022-2023": {
+        "n": 50,
+        "pl": 17.71,
+        "roi": 35.42,
+        "sr": 84.0
+      },
+      "2023-2024": {
+        "n": 40,
+        "pl": 26.66,
+        "roi": 66.65,
+        "sr": 92.5
+      },
+      "2024-2025": {
+        "n": 43,
+        "pl": 2.84,
+        "roi": 6.6,
+        "sr": 76.7
+      },
+      "2025-2026": {
+        "n": 27,
+        "pl": -4.78,
+        "roi": -17.7,
+        "sr": 70.4
+      }
+    },
+    "bets_per_season": 40.6
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Portuguese Primeira Liga",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.2
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 110,
+    "wins": 91,
+    "sr": 82.73,
+    "pl": 31.2,
+    "roi": 28.33,
+    "avg_odds": 3.961,
+    "max_dd": -8.1,
+    "hist_roi": 28.3,
+    "seasons": {
+      "2021-2022": {
+        "n": 31,
+        "pl": 13.21,
+        "roi": 42.61,
+        "sr": 83.9
+      },
+      "2022-2023": {
+        "n": 18,
+        "pl": 5.45,
+        "roi": 30.28,
+        "sr": 83.3
+      },
+      "2023-2024": {
+        "n": 21,
+        "pl": 2.36,
+        "roi": 11.24,
+        "sr": 81.0
+      },
+      "2024-2025": {
+        "n": 17,
+        "pl": 7.3,
+        "roi": 42.94,
+        "sr": 88.2
+      },
+      "2025-2026": {
+        "n": 23,
+        "pl": 2.84,
+        "roi": 12.35,
+        "sr": 78.3
+      }
+    },
+    "bets_per_season": 22.0
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Danish Superligaen",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 1.95
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 124,
+    "wins": 100,
+    "sr": 80.65,
+    "pl": 33.4,
+    "roi": 26.94,
+    "avg_odds": 3.831,
+    "max_dd": -10.1,
+    "hist_roi": 26.9,
+    "seasons": {
+      "2021-2022": {
+        "n": 30,
+        "pl": 9.07,
+        "roi": 30.23,
+        "sr": 80.0
+      },
+      "2022-2023": {
+        "n": 19,
+        "pl": 8.38,
+        "roi": 44.11,
+        "sr": 84.2
+      },
+      "2023-2024": {
+        "n": 18,
+        "pl": 2.87,
+        "roi": 15.94,
+        "sr": 77.8
+      },
+      "2024-2025": {
+        "n": 36,
+        "pl": 16.83,
+        "roi": 46.75,
+        "sr": 86.1
+      },
+      "2025-2026": {
+        "n": 21,
+        "pl": -3.75,
+        "roi": -17.86,
+        "sr": 71.4
+      }
+    },
+    "bets_per_season": 24.8
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "German Bundesliga",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.4
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 128,
+    "wins": 105,
+    "sr": 82.03,
+    "pl": 33.0,
+    "roi": 25.8,
+    "avg_odds": 4.328,
+    "max_dd": -8.9,
+    "hist_roi": 25.8,
+    "seasons": {
+      "2021-2022": {
+        "n": 19,
+        "pl": 5.38,
+        "roi": 28.32,
+        "sr": 84.2
+      },
+      "2022-2023": {
+        "n": 36,
+        "pl": 7.06,
+        "roi": 19.61,
+        "sr": 77.8
+      },
+      "2023-2024": {
+        "n": 20,
+        "pl": 14.72,
+        "roi": 73.6,
+        "sr": 95.0
+      },
+      "2024-2025": {
+        "n": 37,
+        "pl": 3.12,
+        "roi": 8.43,
+        "sr": 78.4
+      },
+      "2025-2026": {
+        "n": 16,
+        "pl": 2.74,
+        "roi": 17.12,
+        "sr": 81.2
+      }
+    },
+    "bets_per_season": 25.6
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Dutch Eredivisie",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.0
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 168,
+    "wins": 136,
+    "sr": 80.95,
+    "pl": 33.8,
+    "roi": 20.11,
+    "avg_odds": 4.38,
+    "max_dd": -12.4,
+    "hist_roi": 20.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 36,
+        "pl": -0.49,
+        "roi": -1.36,
+        "sr": 75.0
+      },
+      "2022-2023": {
+        "n": 39,
+        "pl": 15.44,
+        "roi": 39.59,
+        "sr": 84.6
+      },
+      "2023-2024": {
+        "n": 22,
+        "pl": 11.6,
+        "roi": 52.73,
+        "sr": 90.9
+      },
+      "2024-2025": {
+        "n": 36,
+        "pl": 1.34,
+        "roi": 3.72,
+        "sr": 77.8
+      },
+      "2025-2026": {
+        "n": 35,
+        "pl": 5.89,
+        "roi": 16.83,
+        "sr": 80.0
+      }
+    },
+    "bets_per_season": 33.6
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "English Championship",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.35
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 110,
+    "wins": 83,
+    "sr": 75.45,
+    "pl": 20.0,
+    "roi": 18.14,
+    "avg_odds": 3.489,
+    "max_dd": -8.5,
+    "hist_roi": 18.1,
+    "seasons": {
+      "2021-2022": {
+        "n": 16,
+        "pl": 6.91,
+        "roi": 43.19,
+        "sr": 81.2
+      },
+      "2022-2023": {
+        "n": 20,
+        "pl": 1.06,
+        "roi": 5.3,
+        "sr": 70.0
+      },
+      "2023-2024": {
+        "n": 37,
+        "pl": 14.26,
+        "roi": 38.54,
+        "sr": 83.8
+      },
+      "2024-2025": {
+        "n": 24,
+        "pl": 1.33,
+        "roi": 5.54,
+        "sr": 70.8
+      },
+      "2025-2026": {
+        "n": 13,
+        "pl": -3.61,
+        "roi": -27.77,
+        "sr": 61.5
+      }
+    },
+    "bets_per_season": 22.0
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Scottish Premiership",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 0.85
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 644,
+    "wins": 488,
+    "sr": 75.78,
+    "pl": 93.6,
+    "roi": 14.54,
+    "avg_odds": 3.65,
+    "max_dd": -28.3,
+    "hist_roi": 14.5,
+    "seasons": {
+      "2021-2022": {
+        "n": 130,
+        "pl": -15.23,
+        "roi": -11.72,
+        "sr": 66.2
+      },
+      "2022-2023": {
+        "n": 141,
+        "pl": 37.62,
+        "roi": 26.68,
+        "sr": 79.4
+      },
+      "2023-2024": {
+        "n": 123,
+        "pl": 8.85,
+        "roi": 7.2,
+        "sr": 73.2
+      },
+      "2024-2025": {
+        "n": 148,
+        "pl": 45.27,
+        "roi": 30.59,
+        "sr": 81.1
+      },
+      "2025-2026": {
+        "n": 102,
+        "pl": 17.1,
+        "roi": 16.76,
+        "sr": 78.4
+      }
+    },
+    "bets_per_season": 128.8
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "Swiss Super League",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 2.1
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 122,
+    "wins": 97,
+    "sr": 79.51,
+    "pl": 15.9,
+    "roi": 13.0,
+    "avg_odds": 4.235,
+    "max_dd": -9.3,
+    "hist_roi": 13.0,
+    "seasons": {
+      "2021-2022": {
+        "n": 31,
+        "pl": 13.56,
+        "roi": 43.74,
+        "sr": 87.1
+      },
+      "2022-2023": {
+        "n": 22,
+        "pl": 4.39,
+        "roi": 19.95,
+        "sr": 81.8
+      },
+      "2023-2024": {
+        "n": 19,
+        "pl": 0.95,
+        "roi": 5.0,
+        "sr": 78.9
+      },
+      "2024-2025": {
+        "n": 19,
+        "pl": 0.17,
+        "roi": 0.89,
+        "sr": 73.7
+      },
+      "2025-2026": {
+        "n": 31,
+        "pl": -3.21,
+        "roi": -10.35,
+        "sr": 74.2
+      }
+    },
+    "bets_per_season": 24.4
+  },
+  {
+    "system": "FHG Lay U0.5",
+    "system_key": "Lay_FHU05",
+    "league": "English League One",
+    "bet_type": "LAY",
+    "xg_col": "G6_FH_xG",
+    "xg_rules": [
+      {
+        "op": ">",
+        "thresh": 1.5
+      }
+    ],
+    "poisson_value_filter": false,
+    "odds_min": 1.0,
+    "odds_max": 6.0,
+    "n": 562,
+    "wins": 418,
+    "sr": 74.38,
+    "pl": 57.3,
+    "roi": 10.19,
+    "avg_odds": 3.462,
+    "max_dd": -27.9,
+    "hist_roi": 10.2,
+    "seasons": {
+      "2021-2022": {
+        "n": 127,
+        "pl": 3.57,
+        "roi": 2.81,
+        "sr": 71.7
+      },
+      "2022-2023": {
+        "n": 114,
+        "pl": 5.53,
+        "roi": 4.85,
+        "sr": 72.8
+      },
+      "2023-2024": {
+        "n": 124,
+        "pl": 52.76,
+        "roi": 42.55,
+        "sr": 83.1
+      },
+      "2024-2025": {
+        "n": 113,
+        "pl": -10.28,
+        "roi": -9.1,
+        "sr": 69.9
+      },
+      "2025-2026": {
+        "n": 84,
+        "pl": 5.71,
+        "roi": 6.8,
+        "sr": 73.8
+      }
+    },
+    "bets_per_season": 112.4
+  }
+]
