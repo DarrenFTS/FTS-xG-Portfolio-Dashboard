@@ -107,8 +107,8 @@ if uploaded:
             fmt['Odds'] = '{:.2f}'
 
         styled = show_df.style.format(fmt)\
-            .applymap(style_market, subset=['Market'])\
-            .applymap(style_roi, subset=['Hist ROI'])
+            .map(style_market, subset=['Market'])\
+            .map(style_roi, subset=['Hist ROI'])
 
         st.dataframe(styled, use_container_width=True, hide_index=True,
                      height=min(600, 60 + len(display_df) * 35))
