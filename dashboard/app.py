@@ -1,6 +1,7 @@
 """
-FTS xG Portfolio Dashboard  —  Main entry point
-Run: streamlit run dashboard/app.py --server.port 8502
+FTS xG Portfolio Dashboard — Home
+4 systems · 41 league combinations · 2,517 bets · +22.69% blended ROI
+Verified against real database: FTS_Advanced_Results_xG_21-26.xlsx
 """
 import streamlit as st
 
@@ -11,49 +12,30 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Shared CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
 [data-testid="stSidebar"] { background: #0D2B55; }
 [data-testid="stSidebar"] * { color: white !important; }
-[data-testid="stSidebar"] .stSelectbox label { color: #DCE9F7 !important; }
-.metric-card {
-    background: #F2F6FB; border-radius: 8px; padding: 16px 20px;
-    border-left: 4px solid #1A5C9E; margin-bottom: 8px;
-}
-.metric-value { font-size: 28px; font-weight: 700; color: #0D2B55; }
-.metric-label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-.system-teal   { border-left-color: #0B5E6B !important; }
-.system-green  { border-left-color: #217346 !important; }
-.system-purple { border-left-color: #4A235A !important; }
-.system-orange { border-left-color: #B35C00 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown("""
-# ⚽ FTS xG Systems Dashboard
-**4 systems  ·  32 league-system combinations  ·  6,783 historical bets  ·  +16.0% blended ROI**
+st.markdown("# ⚽ FTS xG Systems Dashboard")
+st.markdown("**4 systems  ·  41 league combinations  ·  2,517 historical bets  ·  +22.69% blended ROI**")
+st.markdown("*All leagues verified against real database — ROI ≥ 10%, max 1 negative season, DD ≤ -30 pts*")
+st.divider()
 
----
-""")
-
-col1, col2, col3, col4, col5 = st.columns(5)
-with col1:
-    st.metric("Total Bets", "6,783", "2021–2026")
-with col2:
-    st.metric("Total P/L", "+1,083.2 pts", "+16.0% ROI")
-with col3:
-    st.metric("Lay U1.5", "+19.4% ROI", "6 leagues")
-with col4:
-    st.metric("FHG Lay U0.5", "+18.7% ROI", "10 leagues")
-with col5:
-    st.metric("Back O2.5", "+13.1% ROI", "6 leagues")
+c1, c2, c3, c4, c5 = st.columns(5)
+c1.metric("Total Bets",    "2,517",       "2021–2026")
+c2.metric("Total P/L",    "+571.03 pts",  "+22.69% ROI")
+c3.metric("Lay U1.5",     "+23.34% ROI",  "9 leagues")
+c4.metric("FHG Lay U0.5", "+26.34% ROI",  "12 leagues")
+c5.metric("Lay O3.5",     "+22.15% ROI",  "14 leagues")
 
 st.markdown("""
 ---
 ### Navigate using the sidebar
-- **📊 Portfolio Overview** — Full performance breakdown with charts
+- **📊 Portfolio** — Full performance breakdown with charts
 - **🎯 Daily Selector** — Upload fixtures, generate & download selections
 - **📈 System Performance** — Detailed per-system and per-league analysis
-- **🔬 Analytics** — Edge analysis, seasonality, distributions
+- **🔬 Analytics** — Edge analysis, distributions, rolling ROI
 """)
