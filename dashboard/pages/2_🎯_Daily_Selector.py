@@ -101,4 +101,3 @@ if uploaded:
 | **Lay O3.5** | 6G Match xG | Spanish La Liga ≤1.50 · German BL2 ≤2.00 · Belgian PL ≤2.00 · Irish PL ≤2.85 · Dutch Eredivisie ≤2.05 · Italian SA ≤1.40 · Spanish Segunda ≥3.60 · Austrian BL ≥2.35 · Eng Champ ≥3.85 · Dutch Eerste ≥4.70 | Lay 1.00–6.00 |
 | **FHG Lay U0.5** | 6G FH xG | Polish EK ≥1.90 · Belgian PL ≥1.95 · Portuguese PL ≥2.20 · Danish SL ≥1.95 · German BL ≥2.40 · Dutch Eredivisie ≥2.00 · Eng Champ ≥2.35 · Scottish Prem ≥0.85 · Swiss SL ≥2.10 · Eng L1 ≥1.50 | Lay 1.00–6.00 |
         """)
-
