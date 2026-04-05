@@ -126,4 +126,3 @@ fig3.update_layout(height=300,template='plotly_white',barmode='group',
     legend=dict(orientation='h',y=-0.22),margin=dict(l=0,r=0,t=10,b=60),
     yaxis_title="ROI %",xaxis_title="Season")
 st.plotly_chart(fig3,use_container_width=True)
-
