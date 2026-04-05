@@ -5,37 +5,35 @@ import plotly.graph_objects as go
 import json, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
 st.set_page_config(page_title="Portfolio Overview", page_icon="📊", layout="wide")
 st.markdown("""<style>
 [data-testid="stSidebar"]{background:#0D2B55;}
 [data-testid="stSidebar"]*{color:white!important;}
 </style>""", unsafe_allow_html=True)
 
-@st.cache_data
+MKT={"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00"}
+
+@st.cache_data(ttl=300)
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    bets = pd.DataFrame(json.load(open(os.path.join(base,'data','portfolio_master_sheet.json'))))
-    bets['date'] = pd.to_datetime(bets['date'], errors='coerce')
+    base=os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    bets=pd.DataFrame(json.load(open(os.path.join(base,'data','portfolio_master_sheet.json'))))
+    bets['date']=pd.to_datetime(bets['date'],errors='coerce')
     return bets
 
-bets = load_data()
-
-MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00"}
-
+bets=load_data()
 st.title("📊 Portfolio Overview")
 
 with st.sidebar:
     st.header("Filters")
-    sel_sys = st.selectbox("System", ["All"]+sorted(bets['system'].unique()))
-    sel_lg  = st.selectbox("League", ["All"]+sorted(bets['league'].unique()))
-    dr = st.date_input("Date Range", value=(bets['date'].min().date(), bets['date'].max().date()))
+    sel_sys=st.selectbox("System",["All"]+sorted(bets['system'].unique()))
+    sel_lg=st.selectbox("League",["All"]+sorted(bets['league'].unique()))
+    dr=st.date_input("Date Range",value=(bets['date'].min().date(),bets['date'].max().date()))
 
-f = bets.copy()
-if sel_sys != "All": f = f[f['system']==sel_sys]
-if sel_lg  != "All": f = f[f['league']==sel_lg]
+f=bets.copy()
+if sel_sys!="All": f=f[f['system']==sel_sys]
+if sel_lg!="All":  f=f[f['league']==sel_lg]
 if len(dr)==2:
-    f = f[(f['date'].dt.date>=dr[0])&(f['date'].dt.date<=dr[1])]
+    f=f[(f['date'].dt.date>=dr[0])&(f['date'].dt.date<=dr[1])]
 
 n=len(f); pl=f['pl'].sum(); roi=pl/n*100 if n else 0
 sr=f['won'].mean()*100 if n else 0
@@ -43,14 +41,13 @@ cum=f.sort_values('date')['pl'].cumsum()
 dd=float((cum-cum.cummax()).min()) if len(cum) else 0
 
 c1,c2,c3,c4,c5=st.columns(5)
-c1.metric("Total Bets",  f"{n:,}")
-c2.metric("Total P/L",   f"{pl:+.2f} pts")
-c3.metric("ROI",         f"{roi:+.2f}%")
-c4.metric("Strike Rate", f"{sr:.2f}%")
+c1.metric("Total Bets",f"{n:,}")
+c2.metric("Total P/L",f"{pl:+.2f} pts")
+c3.metric("ROI",f"{roi:+.2f}%")
+c4.metric("Strike Rate",f"{sr:.2f}%")
 c5.metric("Max Drawdown",f"{dd:.2f} pts")
 st.divider()
 
-# Cumulative P/L chart
 st.subheader("📈 Cumulative P/L")
 cd=f.sort_values('date').copy(); cd['cumpl']=cd['pl'].cumsum()
 fig=go.Figure()
@@ -67,7 +64,6 @@ fig.update_layout(height=360,template='plotly_white',
     legend=dict(orientation='h',y=-0.18),margin=dict(l=0,r=0,t=10,b=50),yaxis_title="P/L (pts)")
 st.plotly_chart(fig,use_container_width=True)
 
-# System table
 cl,cr=st.columns([3,2])
 with cl:
     st.subheader("System Breakdown")
@@ -86,8 +82,6 @@ with cr:
     st.plotly_chart(fig2,use_container_width=True)
 
 st.divider()
-
-# League table
 st.subheader("League Breakdown")
 lg=f.groupby(['system','league']).agg(Bets=('pl','count'),PL=('pl','sum'),Won=('won','sum')).reset_index()
 lg['ROI%']=lg['PL']/lg['Bets']*100; lg['SR%']=lg['Won']/lg['Bets']*100
@@ -95,24 +89,21 @@ lg=lg.rename(columns={'system':'System','league':'League'})
 lg=lg[['System','League','Bets','PL','ROI%','SR%']].sort_values(['System','ROI%'],ascending=[True,False])
 
 def croi(v):
-    if v>=20: return 'background-color:#D6EFE1;color:#155C2E'
-    if v>=10: return 'background-color:#DCE9F7;color:#0B5E6B'
+    if v>=30: return 'background-color:#D6EFE1;color:#155C2E'
+    if v>=15: return 'background-color:#DCE9F7;color:#0B5E6B'
     if v>0:   return 'background-color:#FEF3C7'
     return 'background-color:#FDE8E8;color:#9B1C1C'
 
 st.dataframe(lg.style.format({'PL':'{:+.2f}','ROI%':'{:+.2f}%','SR%':'{:.2f}%'})
-               .map(croi,subset=['ROI%']),
-             use_container_width=True,hide_index=True,height=480)
+               .applymap(croi,subset=['ROI%']),
+             use_container_width=True,hide_index=True,height=500)
 
 st.divider()
-
-# Season chart
 st.subheader("📅 Season Performance")
 def ssn(d):
     if pd.isna(d): return 'Unknown'
     y=d.year; m=d.month
     return f"{y}-{y+1}" if m>=7 else f"{y-1}-{y}"
-
 f2=f.copy(); f2['sl']=f2['date'].apply(ssn)
 sg2=f2.groupby(['sl','system']).agg(Bets=('pl','count'),PL=('pl','sum')).reset_index()
 sg2['ROI%']=sg2['PL']/sg2['Bets']*100
