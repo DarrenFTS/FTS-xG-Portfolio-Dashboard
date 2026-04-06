@@ -81,7 +81,7 @@ if uploaded:
                 return ''
 
         st.dataframe(
-            show.style.format(fmt).applymap(sm, subset=['Market']).applymap(sr2, subset=['Hist ROI']),
+            show.style.format(fmt).map(sm, subset=['Market']).map(sr2, subset=['Hist ROI']),
             use_container_width=True, hide_index=True,
             height=min(580, 60 + len(show) * 35))
 

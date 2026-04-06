@@ -102,7 +102,7 @@ def croi(v):
 
 st.dataframe(
     lg.style.format({'PL':'{:+.2f}','ROI%':'{:+.2f}%','SR%':'{:.2f}%'})
-      .applymap(croi, subset=['ROI%']),
+      .map(croi, subset=['ROI%']),
     use_container_width=True, hide_index=True, height=520)
 
 st.divider()

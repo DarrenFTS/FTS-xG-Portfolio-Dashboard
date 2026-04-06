@@ -104,7 +104,7 @@ with ct:
     st.dataframe(
         lg.style.format({'PL':'{:+.2f}','ROI%':'{:+.2f}%','SR%':'{:.2f}%',
                          'AvgOdds':'{:.2f}','MaxDD':'{:.2f}'})
-          .applymap(rc, subset=['ROI%']),
+          .map(rc, subset=['ROI%']),
         use_container_width=True, hide_index=True)
 with cb:
     flg = go.Figure(go.Bar(x=lg['League'], y=lg['ROI%'].round(2),
@@ -137,7 +137,7 @@ def hc(v):
     if v >  0:  return 'background-color:#FEF3C7;color:#92580B'
     return 'background-color:#FDE8E8;color:#9B1C1C'
 
-st.dataframe(pv.style.format('{:+.2f}%', na_rep='—').applymap(hc),
+st.dataframe(pv.style.format('{:+.2f}%', na_rep='—').map(hc),
              use_container_width=True)
 
 st.divider()
