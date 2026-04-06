@@ -2,13 +2,13 @@
 FTS xG Betting Systems — CONFIRMED FINAL PORTFOLIO
 Verified against FTS_Advanced_Results_xG_21-26.xlsx (35,412 rows)
 
-Column mapping (confirmed by user):
-  xG filter : Col N  (idx 13) — Match xG (6 Game Model)
-  FH xG     : Col J  (idx  9) — 1st Half xGTot (6 Game Model)
-  U1.5 Lay  : Col BS (idx 70) odds / Col BT (idx 71) P/L
-  O2.5 Back : Col BL (idx 63) odds / Col BM (idx 64) P/L
-  O3.5 Lay  : Col CB (idx 79) odds / Col CC (idx 80) P/L
-  FHG Lay   : Col CG (idx 84) odds / Col CH (idx 85) P/L
+PreMatch file column mapping (Sheet1, 2 header rows, data from row 3):
+  Match xG (6G) : Col AI (idx 34)
+  FH xGTot (6G) : Col AE (idx 30)
+  U1.5 Lay Odds : Col CK (idx 88)
+  O2.5 Back Odds: Col CG (idx 84)
+  O3.5 Lay Odds : Col CR (idx 95)
+  FHG Lay Odds  : Col DE (idx 108)
 
 4 systems · 30 leagues · 3,080 bets · +628.10 pts · +20.39% ROI
 All leagues: ROI>=10%, max 1 neg season, DD>=-30 pts, min 50 bets
@@ -36,20 +36,20 @@ class BetSignal:
     hist_roi: float
 
 
-# ── PreMatch file column mapping (Sheet1, skip first 2 header rows) ───────────
-# These match the confirmed column positions in the FTS Advanced PreMatch file
+# ── PreMatch file column mapping (Sheet1, 2 header rows, data from row index 2) ─
+# Confirmed against FTSAdvanced-PreMatch.xlsx — different layout to Results file
 COL_MAP = {
-    'date':         0,
-    'time':         1,
-    'league':       3,
-    'home':         4,
-    'away':         5,
-    'g6_fh_xg':     9,   # Col J — 1st Half xGTot (6 Game Model)
-    'g6_match_xg': 13,   # Col N — Match xG (6 Game Model)
-    'o25_back':    63,   # Col BL — O2.5 Back Odds
-    'u15_lay':     70,   # Col BS — U1.5 Lay Odds
-    'o35_lay':     79,   # Col CB — O3.5 Lay Odds
-    'fhu05_lay':   84,   # Col CG — FHGU0.5 Lay Odds
+    'date':         0,    # Col A
+    'time':         1,    # Col B
+    'league':       3,    # Col D — Competition
+    'home':         4,    # Col E — Home Team
+    'away':         5,    # Col F — Away Team
+    'g6_fh_xg':    30,   # Col AE — 1st Half xGTot (6 Game Model)
+    'g6_match_xg': 34,   # Col AI — Match xG (6 Game Model)
+    'o25_back':    84,   # Col CG — O2.5 Back Odds
+    'u15_lay':     88,   # Col CK — U1.5 Lay Odds
+    'o35_lay':     95,   # Col CR — O3.5 Lay Odds
+    'fhu05_lay':  108,   # Col DE — FHGU0.5 Lay Odds
 }
 
 
