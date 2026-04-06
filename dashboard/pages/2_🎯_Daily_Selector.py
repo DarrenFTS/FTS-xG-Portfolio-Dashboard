@@ -106,10 +106,10 @@ if uploaded:
 
     with st.expander("📖 System Rules Reference"):
         st.markdown("""
-| System | xG Column | Leagues & Rules | Odds Filter |
-|--------|-----------|----------------|-------------|
-| **Lay U1.5** | Match xG ≥ threshold (Col N) | Swedish AS ≥4.00 · Polish EK ≥4.25 · German BL2 ≥4.25 · Danish SL ≥3.75 · Belgian PL ≥3.75 · Italian SA ≥4.50 · Scottish Prem ≥2.75 | Lay 1.00–6.00 (Col BS) |
-| **Back O2.5** | Match xG ≥ threshold (Col N) | Irish PL ≥3.75 · Eng Champ ≥4.75 · Polish EK ≥4.25 · Portuguese PL ≥4.50 · Italian SA ≥4.50 · Spanish La Liga ≥3.75 · Dutch Eredivisie ≥4.50 · EPL ≥4.50 | Back 1.50–2.50 (Col BL) |
-| **Lay O3.5** | Match xG filter (Col N) | HIGH: Spanish Segunda ≥4.25 · Dutch Eerste ≥4.75 · German BL ≥5.25 · French L1 ≥4.75 · LOW: German BL2 ≤1.75 · Spanish La Liga ≤1.25 · Belgian PL ≤2.00 · Eng Champ ≤1.25 | Lay 1.00–6.00 (Col CB) |
-| **FHG Lay U0.5** | FH xGTot ≥ threshold (Col J) | Danish SL ≥2.50 · Polish EK ≥2.25 · Portuguese PL ≥2.25 · French L1 ≥2.50 · Dutch Eredivisie ≥2.00 · German BL ≥2.50 · Eng Champ ≥2.50 | Lay 1.00–6.00 (Col CG) |
+| System | xG Column (PreMatch) | Leagues & Rules | Odds Filter (PreMatch) |
+|--------|---------------------|----------------|----------------------|
+| **Lay U1.5** | Match xG — Col AI | Swedish AS ≥4.00 · Polish EK ≥4.25 · German BL2 ≥4.25 · Danish SL ≥3.75 · Belgian PL ≥3.75 · Italian SA ≥4.50 · Scottish Prem ≥2.75 | Lay 1.00–6.00 — Col CK |
+| **Back O2.5** | Match xG — Col AI | Irish PL ≥3.75 · Eng Champ ≥4.75 · Polish EK ≥4.25 · Portuguese PL ≥4.50 · Italian SA ≥4.50 · Spanish La Liga ≥3.75 · Dutch Eredivisie ≥4.50 · EPL ≥4.50 | Back 1.50–2.50 — Col CG |
+| **Lay O3.5** | Match xG — Col AI | HIGH xG: Spanish Segunda ≥4.25 · Dutch Eerste ≥4.75 · German BL ≥5.25 · French L1 ≥4.75 · LOW xG: German BL2 ≤1.75 · Spanish La Liga ≤1.25 · Belgian PL ≤2.00 · Eng Champ ≤1.25 | Lay 1.00–6.00 — Col CR |
+| **FHG Lay U0.5** | FH xGTot — Col AE | Danish SL ≥2.50 · Polish EK ≥2.25 · Portuguese PL ≥2.25 · French L1 ≥2.50 · Dutch Eredivisie ≥2.00 · German BL ≥2.50 · Eng Champ ≥2.50 | Lay 1.00–6.00 — Col DE |
         """)
