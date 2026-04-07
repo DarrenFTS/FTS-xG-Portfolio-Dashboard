@@ -5,6 +5,14 @@ import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 
+
+def hex_alpha(hex_color, alpha=0.67):
+    """Convert #rrggbb hex + alpha float to rgba() string."""
+    h = hex_color.lstrip('#')
+    r, g, b = int(h[0:2],16), int(h[2:4],16), int(h[4:6],16)
+    return f"rgba({r},{g},{b},{alpha})"
+
+
 st.set_page_config(page_title="Results Dashboard", page_icon="📉", layout="wide")
 st.markdown("""<style>
 [data-testid="stSidebar"]{background:#0D2B55;}
@@ -293,7 +301,7 @@ with tab_overview:
         fig_odds = go.Figure(go.Bar(
             x=SYSTEMS,
             y=[SYSTEM_DATA[s]["avg_odds"] for s in SYSTEMS],
-            marker_color=[SYSTEM_DATA[s]["color"]+"aa" for s in SYSTEMS],
+            marker_color=[hex_alpha(SYSTEM_DATA[s]["color"]) for s in SYSTEMS],
             marker_line_color=[SYSTEM_DATA[s]["color"] for s in SYSTEMS],
             marker_line_width=1.5,
             text=[str(SYSTEM_DATA[s]["avg_odds"]) for s in SYSTEMS],
@@ -386,7 +394,7 @@ def render_system_tab(tab, sys_name):
             seasons = d["seasons"]
             s_labels = [s["Season"] for s in seasons]
             s_vals   = [s[m] for s in seasons]
-            s_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in s_vals] if m == "pl" else [color+"aa"]*len(s_vals)
+            s_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in s_vals] if m == "pl" else [hex_alpha(color)]*len(s_vals)
             s_borders= ["#3fb950" if v >= 0 else "#f85149" for v in s_vals] if m == "pl" else [color]*len(s_vals)
 
             fig_s = go.Figure(go.Bar(
@@ -414,7 +422,7 @@ def render_system_tab(tab, sys_name):
             comps = sorted(d["competitions"], key=lambda x: x[m2], reverse=True)
             c_labels = [c["Competition"] for c in comps]
             c_vals   = [c[m2] for c in comps]
-            c_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in c_vals] if m2=="pl" else [color+"aa"]*len(c_vals)
+            c_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in c_vals] if m2=="pl" else [hex_alpha(color)]*len(c_vals)
             c_borders= ["#3fb950" if v >= 0 else "#f85149" for v in c_vals] if m2=="pl" else [color]*len(c_vals)
 
             fig_c = go.Figure(go.Bar(
