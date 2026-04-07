@@ -219,8 +219,8 @@ with tab_overview:
     fig_all.update_layout(
         height=380, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
         font=dict(color="#e6edf3", size=12),
-        xaxis=dict(gridcolor="#30363d44", showgrid=True),
-        yaxis=dict(gridcolor="#30363d44", showgrid=True, title="Cumulative P&L (pts)"),
+        xaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True),
+        yaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True, title="Cumulative P&L (pts)"),
         legend=dict(bgcolor="#161b22", bordercolor="#30363d", borderwidth=1),
         hovermode="x unified", margin=dict(t=20, b=40, l=60, r=20),
     )
@@ -242,8 +242,8 @@ with tab_overview:
         fig_bar.update_layout(
             height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
             font=dict(color="#e6edf3"), showlegend=False,
-            xaxis=dict(gridcolor="#30363d44"),
-            yaxis=dict(gridcolor="#30363d44", title="P&L (pts)"),
+            xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
+            yaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="P&L (pts)"),
             margin=dict(t=20, b=40, l=60, r=20),
         )
         st.plotly_chart(fig_bar, use_container_width=True)
@@ -254,7 +254,7 @@ with tab_overview:
             x=[SYSTEM_DATA[s]["max_dd"] for s in SYSTEMS],
             y=SYSTEMS,
             orientation="h",
-            marker_color="#f85149aa",
+            marker_color='rgba(248,81,73,0.67)',
             marker_line_color="#f85149",
             marker_line_width=1.5,
             text=[f"{SYSTEM_DATA[s]['max_dd']:.2f}" for s in SYSTEMS],
@@ -263,7 +263,7 @@ with tab_overview:
         fig_dd.update_layout(
             height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
             font=dict(color="#e6edf3"), showlegend=False,
-            xaxis=dict(gridcolor="#30363d44", title="Max Drawdown (pts)"),
+            xaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="Max Drawdown (pts)"),
             yaxis=dict(gridcolor="rgba(0,0,0,0)"),
             margin=dict(t=20, b=40, l=160, r=60),
         )
@@ -302,8 +302,8 @@ with tab_overview:
         fig_odds.update_layout(
             height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
             font=dict(color="#e6edf3"), showlegend=False,
-            xaxis=dict(gridcolor="#30363d44"),
-            yaxis=dict(gridcolor="#30363d44", title="Avg Odds", range=[0, 6]),
+            xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
+            yaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="Avg Odds", range=[0, 6]),
             margin=dict(t=20, b=40, l=60, r=20),
         )
         st.plotly_chart(fig_odds, use_container_width=True)
@@ -367,8 +367,8 @@ def render_system_tab(tab, sys_name):
         fig_cum.update_layout(
             height=360, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
             font=dict(color="#e6edf3"),
-            xaxis=dict(gridcolor="#30363d44", showgrid=True),
-            yaxis=dict(gridcolor="#30363d44", showgrid=True, title="Cumulative P&L (pts)"),
+            xaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True),
+            yaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True, title="Cumulative P&L (pts)"),
             showlegend=False, hovermode="x unified",
             margin=dict(t=10, b=40, l=60, r=20),
         )
@@ -386,7 +386,7 @@ def render_system_tab(tab, sys_name):
             seasons = d["seasons"]
             s_labels = [s["Season"] for s in seasons]
             s_vals   = [s[m] for s in seasons]
-            s_colors = ["#3fb950aa" if v >= 0 else "#f8514988" for v in s_vals] if m == "pl" else [color+"aa"]*len(s_vals)
+            s_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in s_vals] if m == "pl" else [color+"aa"]*len(s_vals)
             s_borders= ["#3fb950" if v >= 0 else "#f85149" for v in s_vals] if m == "pl" else [color]*len(s_vals)
 
             fig_s = go.Figure(go.Bar(
@@ -400,8 +400,8 @@ def render_system_tab(tab, sys_name):
             fig_s.update_layout(
                 height=320, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
                 font=dict(color="#e6edf3"), showlegend=False,
-                xaxis=dict(gridcolor="#30363d44", tickangle=45),
-                yaxis=dict(gridcolor="#30363d44"),
+                xaxis=dict(gridcolor="rgba(48,54,61,0.27)", tickangle=45),
+                yaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
                 margin=dict(t=30, b=80, l=60, r=20),
             )
             st.plotly_chart(fig_s, use_container_width=True)
@@ -414,7 +414,7 @@ def render_system_tab(tab, sys_name):
             comps = sorted(d["competitions"], key=lambda x: x[m2], reverse=True)
             c_labels = [c["Competition"] for c in comps]
             c_vals   = [c[m2] for c in comps]
-            c_colors = ["#3fb950aa" if v >= 0 else "#f8514988" for v in c_vals] if m2=="pl" else [color+"aa"]*len(c_vals)
+            c_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in c_vals] if m2=="pl" else [color+"aa"]*len(c_vals)
             c_borders= ["#3fb950" if v >= 0 else "#f85149" for v in c_vals] if m2=="pl" else [color]*len(c_vals)
 
             fig_c = go.Figure(go.Bar(
@@ -429,7 +429,7 @@ def render_system_tab(tab, sys_name):
             fig_c.update_layout(
                 height=320, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
                 font=dict(color="#e6edf3", size=11), showlegend=False,
-                xaxis=dict(gridcolor="#30363d44"),
+                xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
                 yaxis=dict(gridcolor="rgba(0,0,0,0)"),
                 margin=dict(t=30, b=40, l=180, r=60),
             )
