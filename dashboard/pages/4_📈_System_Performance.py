@@ -8,8 +8,27 @@ import json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 st.set_page_config(page_title="System Performance", page_icon="📈", layout="wide")
 st.markdown("""<style>
-[data-testid="stSidebar"]{background:#0D2B55;}
-[data-testid="stSidebar"]*{color:white!important;}
+/* Sidebar background */
+[data-testid="stSidebar"] { background: #0D2B55 !important; }
+
+/* Nuclear option — every element inside sidebar = white */
+[data-testid="stSidebar"],
+[data-testid="stSidebar"] *,
+[data-testid="stSidebarNav"],
+[data-testid="stSidebarNav"] *,
+[data-testid="stSidebarNavLink"],
+[data-testid="stSidebarNavLink"] *,
+[data-testid="stSidebarNavSeparator"],
+[data-testid="stSidebarNavSeparator"] *,
+section[data-testid="stSidebar"] a,
+section[data-testid="stSidebar"] a *,
+section[data-testid="stSidebar"] li,
+section[data-testid="stSidebar"] li *,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] div { color: #ffffff !important; }
+
+/* Page headings */
 h1, h2, h3, h4,
 .stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
 [data-testid="stHeadingWithActionElements"] h1,
