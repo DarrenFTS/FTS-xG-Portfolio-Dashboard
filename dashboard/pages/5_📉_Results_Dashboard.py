@@ -366,7 +366,7 @@ def render_system_tab(tab, sys_name):
             x=dates, y=values,
             fill="tozeroy",
             line=dict(color=color, width=2.5),
-            fillcolor=color+"20",
+            fillcolor=hex_alpha(color, 0.13),
             mode="lines",
             name=sys_name,
             hovertemplate="Date: %{x}<br>P&L: %{y:.2f} pts<extra></extra>",
