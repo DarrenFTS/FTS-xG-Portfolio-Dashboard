@@ -10,7 +10,14 @@ st.set_page_config(page_title="System Performance", page_icon="📈", layout="wi
 st.markdown("""<style>
 [data-testid="stSidebar"]{background:#0D2B55;}
 [data-testid="stSidebar"]*{color:white!important;}
-h1, h2, h3 { color: #ffffff !important; }
+h1, h2, h3, h4,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+[data-testid="stHeadingWithActionElements"] h1,
+[data-testid="stHeadingWithActionElements"] h2,
+[data-testid="stHeadingWithActionElements"] h3,
+div[class*="stHeading"] h1,
+div[class*="stHeading"] h2,
+div[class*="stHeading"] h3 { color: #ffffff !important; }
 </style>""", unsafe_allow_html=True)
 
 MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00"}

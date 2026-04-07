@@ -17,11 +17,14 @@ st.set_page_config(page_title="Results Dashboard", page_icon="📉", layout="wid
 st.markdown("""<style>
 [data-testid="stSidebar"]{background:#0D2B55;}
 [data-testid="stSidebar"]*{color:white!important;}
-h1, h2, h3 { color: #ffffff !important; }
-.metric-card {
-    background:#161b22; border:1px solid #30363d; border-radius:10px;
-    padding:16px 18px; margin-bottom:0;
-}
+h1, h2, h3, h4,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+[data-testid="stHeadingWithActionElements"] h1,
+[data-testid="stHeadingWithActionElements"] h2,
+[data-testid="stHeadingWithActionElements"] h3,
+div[class*="stHeading"] h1,
+div[class*="stHeading"] h2,
+div[class*="stHeading"] h3 { color: #ffffff !important; }
 </style>""", unsafe_allow_html=True)
 
 # ── Embedded historical data ──────────────────────────────────────────────────
