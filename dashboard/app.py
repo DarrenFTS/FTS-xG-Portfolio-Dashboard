@@ -8,16 +8,18 @@ st.markdown("""
 <style>
 [data-testid="stSidebar"]{background:#0D2B55;}
 [data-testid="stSidebar"]*{color:white!important;}
-h1, h2, h3 { color: #ffffff !important; }
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3,
-[data-testid="stSidebar"] span,
-[data-testid="stSidebar"] p { color: #ffffff !important; }
+h1, h2, h3, h4,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
+[data-testid="stHeadingWithActionElements"] h1,
+[data-testid="stHeadingWithActionElements"] h2,
+[data-testid="stHeadingWithActionElements"] h3,
+div[class*="stHeading"] h1,
+div[class*="stHeading"] h2,
+div[class*="stHeading"] h3 { color: #ffffff !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ── Header with logo ──────────────────────────────────────────────────────────
+# ── Header with logo + emoji in title ────────────────────────────────────────
 col_logo, col_title = st.columns([1, 8])
 with col_logo:
     st.markdown("""
@@ -31,7 +33,7 @@ with col_title:
     <div style="padding-left:8px">
         <div style="color:#ffffff;font-size:2rem;font-weight:800;
                     letter-spacing:-0.5px;line-height:1.1">
-            FTS xG Systems Dashboard
+            ⚽ FTS xG Systems Dashboard
         </div>
         <div style="color:#8b949e;font-size:0.9rem;margin-top:4px">
             4 systems · 30 leagues · 3,080 bets · +20.39% blended ROI
