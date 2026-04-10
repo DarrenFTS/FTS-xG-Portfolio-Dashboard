@@ -101,16 +101,16 @@ SYSTEM_DATA = {
         ],
     },
     "Lay O3.5": {
-        "total_pl": 144.83, "total_bets": 943, "max_dd": -20.16,
+        "total_pl": 137.98, "total_bets": 889, "max_dd": -20.16,
         "dd_start": "2022-03-14", "dd_end": "2022-05-08",
         "avg_xg": 2.588, "avg_odds": 3.48,
         "color": "#ffa657",
         "seasons": [
-            {"Season":"2021-2022","pl":  5.55,"bets":194,"avg_xg":2.300,"avg_odds":3.682},
-            {"Season":"2022-2023","pl": 42.62,"bets":188,"avg_xg":2.562,"avg_odds":3.510},
-            {"Season":"2023-2024","pl":  1.07,"bets":150,"avg_xg":2.733,"avg_odds":3.301},
-            {"Season":"2024-2025","pl": 40.13,"bets":237,"avg_xg":2.591,"avg_odds":3.439},
-            {"Season":"2025-2026","pl": 55.46,"bets":174,"avg_xg":2.809,"avg_odds":3.432},
+            {"Season":"2021-2022","pl":  1.15,"bets":188,"avg_xg":2.300,"avg_odds":3.682},
+            {"Season":"2022-2023","pl": 42.40,"bets":176,"avg_xg":2.562,"avg_odds":3.510},
+            {"Season":"2023-2024","pl":  7.36,"bets":144,"avg_xg":2.733,"avg_odds":3.301},
+            {"Season":"2024-2025","pl": 38.03,"bets":219,"avg_xg":2.591,"avg_odds":3.439},
+            {"Season":"2025-2026","pl": 49.04,"bets":162,"avg_xg":2.809,"avg_odds":3.432},
         ],
         "competitions": [
             {"Competition":"Belgian Premier League",  "pl":41.82,"bets":309,"avg_xg":1.571,"avg_odds":3.505},
@@ -119,7 +119,6 @@ SYSTEM_DATA = {
             {"Competition":"Dutch Eerste Divisie",   "pl":15.66,"bets":119,"avg_xg":5.464,"avg_odds":2.337},
             {"Competition":"English Championship",   "pl":15.05,"bets":144,"avg_xg":1.012,"avg_odds":4.507},
             {"Competition":"Spanish Primera Division","pl":12.62,"bets":79, "avg_xg":0.948,"avg_odds":4.690},
-            {"Competition":"German Bundesliga",      "pl": 6.85,"bets":54, "avg_xg":5.889,"avg_odds":2.191},
             {"Competition":"French Ligue 1",         "pl": 6.65,"bets":61, "avg_xg":5.352,"avg_odds":2.841},
         ],
     },
@@ -157,7 +156,7 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 CUM_ENDPOINTS = {
     "Lay U1.5":    {"start":"2021-07-23","end":"2026-03-22","final":215.53},
     "Back O2.5":   {"start":"2021-08-16","end":"2026-03-22","final": 87.11},
-    "Lay O3.5":    {"start":"2021-07-27","end":"2026-03-22","final":144.83},
+    "Lay O3.5":    {"start":"2021-07-27","end":"2026-03-22","final":137.98},
     "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-03-22","final":174.33},
 }
 
