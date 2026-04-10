@@ -75,20 +75,20 @@ SYSTEM_DATA = {
         ],
     },
     "Back O2.5": {
-        "total_pl": 94.33, "total_bets": 596, "max_dd": -8.47,
+        "total_pl": 87.11, "total_bets": 519, "max_dd": -8.47,
         "dd_start": "2023-10-28", "dd_end": "2023-11-25",
         "avg_xg": 4.844, "avg_odds": 1.818,
         "color": "#3fb950",
         "seasons": [
-            {"Season":"2021-2022","pl":17.66,"bets":132,"avg_xg":4.915,"avg_odds":1.833},
+            {"Season":"2021-2022","pl":15.00,"bets":112,"avg_xg":4.915,"avg_odds":1.833},
             {"Season":"2022",     "pl": 2.58,"bets":10, "avg_xg":4.216,"avg_odds":1.816},
-            {"Season":"2022-2023","pl":13.23,"bets":97, "avg_xg":4.832,"avg_odds":1.816},
+            {"Season":"2022-2023","pl":10.59,"bets":85, "avg_xg":4.832,"avg_odds":1.816},
             {"Season":"2023",     "pl":12.20,"bets":16, "avg_xg":4.721,"avg_odds":2.004},
-            {"Season":"2023-2024","pl":10.83,"bets":110,"avg_xg":4.895,"avg_odds":1.782},
+            {"Season":"2023-2024","pl":10.08,"bets":98, "avg_xg":4.895,"avg_odds":1.782},
             {"Season":"2024",     "pl": 4.07,"bets":12, "avg_xg":4.519,"avg_odds":1.962},
-            {"Season":"2024-2025","pl":24.93,"bets":110,"avg_xg":4.898,"avg_odds":1.823},
+            {"Season":"2024-2025","pl":22.79,"bets":96, "avg_xg":4.898,"avg_odds":1.823},
             {"Season":"2025",     "pl":-0.04,"bets":13, "avg_xg":4.507,"avg_odds":1.918},
-            {"Season":"2025-2026","pl": 8.87,"bets":96, "avg_xg":4.808,"avg_odds":1.769},
+            {"Season":"2025-2026","pl": 9.84,"bets":77, "avg_xg":4.808,"avg_odds":1.769},
         ],
         "competitions": [
             {"Competition":"Spanish Primera Division","pl":19.82,"bets":151,"avg_xg":4.400,"avg_odds":1.870},
@@ -98,7 +98,6 @@ SYSTEM_DATA = {
             {"Competition":"Italian Serie A",        "pl": 9.84,"bets":66, "avg_xg":5.003,"avg_odds":1.781},
             {"Competition":"Portuguese Primeira Liga","pl": 9.17,"bets":56, "avg_xg":4.926,"avg_odds":1.825},
             {"Competition":"Dutch Eredivisie",       "pl": 7.80,"bets":70, "avg_xg":5.108,"avg_odds":1.697},
-            {"Competition":"English Premier League", "pl": 7.22,"bets":77, "avg_xg":5.040,"avg_odds":1.690},
         ],
     },
     "Lay O3.5": {
@@ -157,7 +156,7 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 # Key points only — enough to draw accurate curves
 CUM_ENDPOINTS = {
     "Lay U1.5":    {"start":"2021-07-23","end":"2026-03-22","final":215.53},
-    "Back O2.5":   {"start":"2021-08-16","end":"2026-03-22","final": 94.33},
+    "Back O2.5":   {"start":"2021-08-16","end":"2026-03-22","final": 87.11},
     "Lay O3.5":    {"start":"2021-07-27","end":"2026-03-22","final":144.83},
     "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-03-22","final":174.33},
 }
