@@ -66,12 +66,11 @@ HIST_ROI = {
     # Back O2.5
     ("Irish Premier League",     "Back_O25"): 36.88,
     ("English Championship",     "Back_O25"): 20.87,
-    ("Polish Ekstraklasa",       "Back_O25"): 16.42,
+    ("Polish Ekstraklasa",       "Back_O25"): 14.82,
     ("Portuguese Primeira Liga", "Back_O25"): 16.38,
     ("Italian Serie A",          "Back_O25"): 14.91,
     ("Spanish Primera Division", "Back_O25"): 12.40,
-    ("Dutch Eredivisie",         "Back_O25"): 10.52,
-    ("English Premier League",   "Back_O25"): 10.31,
+    ("Dutch Eredivisie",         "Back_O25"): 11.14,
     # Lay O3.5
     ("Spanish Segunda Division", "Lay_O35"): 48.04,
     ("German Bundesliga 2",      "Lay_O35"): 16.20,
@@ -196,7 +195,7 @@ class LayU15System(BaseSystem):
 class BackO25System(BaseSystem):
     """
     Back Over 2.5 Goals
-    8 leagues · 585 bets · +93.41 pts · +15.97% ROI
+    7 leagues · 519 bets · +87.11 pts · +16.78% ROI
     Filter: Match xG (Col N) >= threshold · Back odds (Col BL) 1.50–2.50
     """
     system_key   = 'Back_O25'
@@ -208,12 +207,11 @@ class BackO25System(BaseSystem):
     leagues = {
         "Irish Premier League":    ('>=', 3.75),  # +36.88% ROI  3/4 seasons
         "English Championship":    ('>=', 4.75),  # +20.87% ROI  4/5 seasons
-        "Polish Ekstraklasa":      ('>=', 4.25),  # +16.42% ROI  4/5 seasons
+        "Polish Ekstraklasa":      ('>=', 4.25),  # +14.82% ROI  4/5 seasons
         "Portuguese Primeira Liga":('>=', 4.50),  # +16.38% ROI  4/5 seasons
         "Italian Serie A":         ('>=', 4.50),  # +14.91% ROI  4/5 seasons
         "Spanish Primera Division":('>=', 3.75),  # +12.40% ROI  4/5 seasons
-        "Dutch Eredivisie":        ('>=', 4.50),  # +10.52% ROI  4/5 seasons
-        "English Premier League":  ('>=', 4.50),  # +10.31% ROI  4/5 seasons
+        "Dutch Eredivisie":        ('>=', 4.50),  # +11.14% ROI  4/5 seasons
     }
 
 
