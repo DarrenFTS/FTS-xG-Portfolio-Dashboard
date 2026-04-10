@@ -77,7 +77,6 @@ HIST_ROI = {
     ("Spanish Primera Division", "Lay_O35"): 15.97,
     ("Belgian Premier League",   "Lay_O35"): 13.53,
     ("Dutch Eerste Divisie",     "Lay_O35"): 13.16,
-    ("German Bundesliga",        "Lay_O35"): 12.69,
     ("French Ligue 1",           "Lay_O35"): 10.90,
     ("English Championship",     "Lay_O35"): 10.45,
     # FHG Lay U0.5
@@ -219,7 +218,7 @@ class BackO25System(BaseSystem):
 class LayO35System(BaseSystem):
     """
     Lay Over 3.5 Goals
-    8 leagues · 943 bets · +144.83 pts · +15.36% ROI
+    7 leagues · 889 bets · +137.98 pts · +15.52% ROI
     Filter: Match xG (Col N) >= or <= threshold · Lay odds (Col CB) 1.00–6.00
     LOW xG (<=): lay when few goals expected
     HIGH xG (>=): lay when both teams attack freely
@@ -235,7 +234,6 @@ class LayO35System(BaseSystem):
         # HIGH xG
         "Spanish Segunda Division": ('>=', 4.25),  # +48.04% ROI  5/5 seasons
         "Dutch Eerste Divisie":     ('>=', 4.75),  # +13.16% ROI  4/5 seasons
-        "German Bundesliga":        ('>=', 5.25),  # +12.69% ROI  4/5 seasons
         "French Ligue 1":           ('>=', 4.75),  # +10.90% ROI  4/5 seasons
         # LOW xG
         "German Bundesliga 2":      ('<=', 1.75),  # +16.20% ROI  4/5 seasons
