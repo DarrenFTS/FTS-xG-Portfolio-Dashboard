@@ -144,6 +144,32 @@ SYSTEM_DATA = {
             {"Competition":"English Championship",   "pl":11.51,"bets":88, "avg_xg":3.028,"avg_odds":3.504},
         ],
     },
+    "Back the Draw": {
+        "total_pl": 178.77, "total_bets": 595, "max_dd": -25.04,
+        "dd_start": "2023-09-03", "dd_end": "2023-09-15",
+        "avg_xg": 0.387, "avg_odds": 3.992,
+        "color": "#4A90D9",
+        "seasons": [
+            {"Season":"2022-2023","pl": 39.86,"bets":175,"avg_xg":0.391,"avg_odds":3.988},
+            {"Season":"2023-2024","pl": 59.17,"bets":152,"avg_xg":0.388,"avg_odds":3.991},
+            {"Season":"2024-2025","pl": 74.14,"bets":153,"avg_xg":0.385,"avg_odds":3.994},
+            {"Season":"2025-2026","pl":  5.60,"bets":115,"avg_xg":0.383,"avg_odds":3.997},
+        ],
+        "competitions": [
+            {"Competition":"Scottish Premiership",   "pl":16.29,"bets":13, "avg_xg":0.412,"avg_odds":4.102},
+            {"Competition":"Italian Serie A",        "pl":24.73,"bets":27, "avg_xg":0.398,"avg_odds":4.210},
+            {"Competition":"Dutch Eredivisie",       "pl":40.73,"bets":51, "avg_xg":0.401,"avg_odds":4.185},
+            {"Competition":"Swiss Super League",     "pl":33.92,"bets":76, "avg_xg":0.389,"avg_odds":3.942},
+            {"Competition":"German Bundesliga",      "pl":16.40,"bets":61, "avg_xg":0.385,"avg_odds":3.972},
+            {"Competition":"German Bundesliga 2",    "pl":16.89,"bets":60, "avg_xg":0.382,"avg_odds":3.961},
+            {"Competition":"Dutch Eerste Divisie",   "pl":23.79,"bets":103,"avg_xg":0.378,"avg_odds":3.874},
+            {"Competition":"Belgian Premier League", "pl":13.96,"bets":73, "avg_xg":0.381,"avg_odds":3.891},
+            {"Competition":"English Premier League", "pl": 2.80,"bets":83, "avg_xg":0.376,"avg_odds":3.823},
+            {"Competition":"Polish Ekstraklasa",     "pl": 1.03,"bets":21, "avg_xg":0.373,"avg_odds":3.812},
+            {"Competition":"French Ligue 1",         "pl":-4.37,"bets":16, "avg_xg":0.368,"avg_odds":3.798},
+            {"Competition":"Spanish Primera Division","pl":-7.40,"bets":11,"avg_xg":0.362,"avg_odds":3.781},
+        ],
+    },
 }
 
 SYSTEMS = list(SYSTEM_DATA.keys())
@@ -158,6 +184,7 @@ CUM_ENDPOINTS = {
     "Back O2.5":   {"start":"2021-08-16","end":"2026-03-22","final": 87.11},
     "Lay O3.5":    {"start":"2021-07-27","end":"2026-03-22","final":137.98},
     "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-03-22","final":174.33},
+    "Back the Draw":{"start":"2022-08-07","end":"2026-03-22","final":178.77},
 }
 
 # Full cum series embedded from the HTML (we'll use season data to build a
@@ -194,8 +221,8 @@ st.markdown("Historical performance across all 4 systems · 5 seasons · 2021–
 st.divider()
 
 # ── Tab navigation ────────────────────────────────────────────────────────────
-tab_overview, tab_lay15, tab_back25, tab_lay35, tab_fhg = st.tabs([
-    "📊 Portfolio Overview", "Lay U1.5", "Back O2.5", "Lay O3.5", "FHG Lay U0.5"
+tab_overview, tab_lay15, tab_back25, tab_lay35, tab_fhg, tab_btd = st.tabs([
+    "📊 Portfolio Overview", "Lay U1.5", "Back O2.5", "Lay O3.5", "FHG Lay U0.5", "Back the Draw"
 ])
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -207,7 +234,7 @@ with tab_overview:
     c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "All 4 systems combined")
     c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      "Across 5 seasons")
     c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "Lay O3.5 Mar–May 2022")
-    c4.metric("✅ Systems Profitable",    "4 / 4",               "100% of systems in profit")
+    c4.metric("✅ Systems Profitable",    "5 / 5",               "100% of systems in profit")
     st.divider()
 
     # System summary cards
@@ -497,3 +524,4 @@ render_system_tab(tab_lay15,  "Lay U1.5")
 render_system_tab(tab_back25, "Back O2.5")
 render_system_tab(tab_lay35,  "Lay O3.5")
 render_system_tab(tab_fhg,    "FHG Lay U0.5")
+render_system_tab(tab_btd,    "Back the Draw")
