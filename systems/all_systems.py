@@ -46,6 +46,8 @@ COL_MAP = {
     'away':         5,    # Col F — Away Team
     'g6_fh_xg':    30,   # Col AE — 1st Half xGTot (6 Game Model)
     'g6_match_xg': 34,   # Col AI — Match xG (6 Game Model)
+    'supremacy':   58,   # Col BG — Season Home xG Supremacy
+    'draw_odds':   79,   # Col CB — Draw Back Odds
     'o25_back':    84,   # Col CG — O2.5 Back Odds
     'u15_lay':     88,   # Col CK — U1.5 Lay Odds
     'o35_lay':     95,   # Col CR — O3.5 Lay Odds
@@ -95,7 +97,8 @@ def load_fixture_file(filepath: str) -> pd.DataFrame:
     raw = pd.read_excel(filepath, sheet_name='Sheet1', header=None)
     df  = raw.iloc[2:].copy().reset_index(drop=True)
     df  = df.rename(columns={v: k for k, v in COL_MAP.items()})
-    for c in ['g6_fh_xg', 'g6_match_xg', 'u15_lay', 'o25_back', 'o35_lay', 'fhu05_lay']:
+    for c in ['g6_fh_xg', 'g6_match_xg', 'u15_lay', 'o25_back', 'o35_lay', 'fhu05_lay',
+                  'supremacy', 'draw_odds']:
         if c in df.columns:
             df[c] = pd.to_numeric(df[c], errors='coerce')
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
@@ -268,16 +271,11 @@ class LayFHU05System(BaseSystem):
 
 
 # ── Registry ──────────────────────────────────────────────────────────────────
-ALL_SYSTEMS = [
-    LayU15System(),
-    BackO25System(),
-    LayO35System(),
-    LayFHU05System(),
-]
+# ALL_SYSTEMS defined at end of file after BackDrawSystem
 
 
 def scan_all_systems(fixtures: pd.DataFrame) -> List[BetSignal]:
-    """Run all 4 systems against a fixture DataFrame. Returns sorted signal list."""
+    """Run all 5 systems against a fixture DataFrame. Returns sorted signal list."""
     signals = []
     for system in ALL_SYSTEMS:
         signals.extend(system.scan(fixtures))
@@ -304,3 +302,109 @@ def signals_to_dataframe(signals: List[BetSignal]) -> pd.DataFrame:
         '_system_key':   s.system_key,
         '_hist_roi_raw': s.hist_roi,
     } for s in signals])
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# BACK THE DRAW SYSTEM
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Historical ROI per league (all qualifying seasons combined)
+HIST_ROI_BTD = {
+    "Belgian Premier League":    19.12,
+    "Dutch Eerste Divisie":      23.10,
+    "Dutch Eredivisie":          79.86,
+    "English Premier League":     3.37,
+    "French Ligue 1":           -27.31,
+    "German Bundesliga":         26.89,
+    "German Bundesliga 2":       28.15,
+    "Italian Serie A":           91.59,
+    "Polish Ekstraklasa":         4.90,
+    "Scottish Premiership":     125.31,
+    "Spanish Primera Division": -67.27,
+    "Swiss Super League":        44.63,
+}
+
+# Rule 3 gate: prior season (2024-25) 0-0 rate < 6.0%
+# Update each season from btd_00_rates.csv
+BTD_SEASON_GATE = {
+    "Belgian Premier League":    False,  # 9.00% EXCLUDED
+    "Dutch Eerste Divisie":      False,  # 6.05% EXCLUDED
+    "Dutch Eredivisie":          True,   # 3.92% QUALIFIES
+    "English Premier League":    True,   # 4.21% QUALIFIES
+    "French Ligue 1":            True,   # 4.59% QUALIFIES
+    "German Bundesliga":         False,  # 7.19% EXCLUDED
+    "German Bundesliga 2":       False,  # 7.19% EXCLUDED
+    "Italian Serie A":           False,  # 7.37% EXCLUDED
+    "Polish Ekstraklasa":        True,   # 5.88% QUALIFIES
+    "Scottish Premiership":      True,   # 4.39% QUALIFIES
+    "Spanish Primera Division":  True,   # 5.53% QUALIFIES
+    "Swiss Super League":        True,   # 4.39% QUALIFIES
+}
+
+BTD_ALL_LEAGUES = list(BTD_SEASON_GATE.keys())
+
+
+class BackDrawSystem(BaseSystem):
+    """
+    Back the Draw System
+    12 cross-season European leagues | 595 bets | +178.77 pts | +30.05% ROI
+    Rules:
+      1. League eligibility — 12 specified cross-season European leagues
+      2. Season Home Supremacy xG (col BG PreMatch, col AH Results): >= 0.25 and <= 0.55
+      3. Prior season 0-0 rate < 6.0% — from BTD_SEASON_GATE (updated each season)
+      4. Draw back odds (col CB PreMatch, col BE Results) >= 3.60
+         Daily shortlist buffer: >= 3.30
+    """
+    system_label    = 'Back the Draw'
+    system_key      = 'Back_Draw'
+    bet_type        = 'back'
+    SUP_MIN         = 0.25
+    SUP_MAX         = 0.55
+    ODDS_QUALIFY    = 3.60   # Hard qualifying threshold
+    ODDS_BUFFER     = 3.30   # Buffer for daily shortlist
+
+    def scan(self, fixtures: pd.DataFrame) -> list:
+        signals = []
+        for league in BTD_ALL_LEAGUES:
+            # Rule 3: season gate
+            if not BTD_SEASON_GATE.get(league, False):
+                continue
+            ldf = fixtures[fixtures['league'] == league].copy()
+            if len(ldf) == 0:
+                continue
+            # Rule 2: supremacy window
+            ldf = ldf.dropna(subset=['supremacy','draw_odds'])
+            ldf = ldf[(ldf['supremacy'] >= self.SUP_MIN) &
+                      (ldf['supremacy'] <= self.SUP_MAX)]
+            # Rule 4: draw odds buffer (>= 3.30 for shortlist)
+            ldf = ldf[ldf['draw_odds'] >= self.ODDS_BUFFER]
+            if len(ldf) == 0:
+                continue
+            hist_roi = HIST_ROI_BTD.get(league, 0.0)
+            for _, row in ldf.iterrows():
+                is_buffer = float(row['draw_odds']) < self.ODDS_QUALIFY
+                signals.append(BetSignal(
+                    date=str(row.get('date', '')),
+                    time=str(row.get('time', '')),
+                    league=league,
+                    home=str(row.get('home', '')),
+                    away=str(row.get('away', '')),
+                    system=self.system_label,
+                    system_key=self.system_key,
+                    bet_type=self.bet_type,
+                    xg_col='Season Supremacy xG',
+                    xg_value=round(float(row['supremacy']), 3),
+                    rule=f"Sup {self.SUP_MIN}\u2013{self.SUP_MAX} | {'BUFFER' if is_buffer else 'QUALIFIES'}",
+                    odds=round(float(row['draw_odds']), 3),
+                    hist_roi=hist_roi,
+                ))
+        return signals
+
+
+ALL_SYSTEMS = [
+    LayU15System(),
+    BackO25System(),
+    LayO35System(),
+    LayFHU05System(),
+    BackDrawSystem(),
+]
