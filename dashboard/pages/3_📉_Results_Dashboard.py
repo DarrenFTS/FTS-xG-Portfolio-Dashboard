@@ -239,7 +239,7 @@ with tab_overview:
 
     # System summary cards
     st.subheader("System Summary")
-    cols = st.columns(4)
+    cols = st.columns(5)
     for i, sys in enumerate(SYSTEMS):
         d = SYSTEM_DATA[sys]
         with cols[i]:
