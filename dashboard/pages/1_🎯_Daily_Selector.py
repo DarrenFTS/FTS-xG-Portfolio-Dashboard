@@ -41,7 +41,7 @@ div[class*="stHeading"] h2,
 div[class*="stHeading"] h3 { color: #ffffff !important; }
 </style>""", unsafe_allow_html=True)
 
-MKT_C = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00"}
+MKT_C = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
 
 st.title("🎯 Daily Bet Selector")
 st.markdown("Upload today's **FTS Advanced PreMatch Excel** file to generate qualifying selections.")
@@ -57,6 +57,21 @@ if uploaded:
             fixtures = load_fixture_file(tmp)
             signals  = scan_all_systems(fixtures)
             df_sel   = signals_to_dataframe(signals)
+            # Add extra BTD columns from fixtures for Back the Draw signals
+            if 'supremacy' in fixtures.columns and 'draw_odds' in fixtures.columns:
+                btd_mask = df_sel['Market'] == 'Back the Draw'
+                if btd_mask.any():
+                    # Match by home/away to get supremacy and draw_odds
+                    fix_idx = fixtures.set_index(['home','away'])
+                    for idx in df_sel[btd_mask].index:
+                        h = df_sel.loc[idx,'Home']; a = df_sel.loc[idx,'Away']
+                        try:
+                            row = fix_idx.loc[(h,a)]
+                            if hasattr(row,'iloc'): row = row.iloc[0]
+                            df_sel.loc[idx,'Supremacy'] = round(float(row['supremacy']),3)
+                            df_sel.loc[idx,'Draw Odds'] = round(float(row['draw_odds']),3)
+                        except Exception:
+                            pass
             fd       = fixtures['date'].dropna().iloc[0] if len(fixtures) else None
             date_str = fd.strftime('%A %d %B %Y') if fd is not None else str(date.today())
         except Exception as e:
@@ -66,12 +81,13 @@ if uploaded:
 
     from collections import Counter
     mc = Counter(s.system for s in signals)
-    c1,c2,c3,c4,c5 = st.columns(5)
+    c1,c2,c3,c4,c5,c6 = st.columns(6)
     c1.metric("Selections",    len(signals))
     c2.metric("Lay U1.5",      mc.get('Lay U1.5', 0))
     c3.metric("Back O2.5",     mc.get('Back O2.5', 0))
     c4.metric("Lay O3.5",      mc.get('Lay O3.5', 0))
     c5.metric("FHG Lay U0.5",  mc.get('FHG Lay U0.5', 0))
+    c6.metric("Back the Draw", mc.get('Back the Draw', 0))
     st.divider()
 
     if not df_sel.empty:
@@ -85,7 +101,7 @@ if uploaded:
                                 default=sorted(df_sel['League'].unique()))
 
         show = df_sel[df_sel['Market'].isin(sf) & df_sel['League'].isin(lf)].copy()
-        cols = ['Date','Time','League','Home','Away','Market','6G xG','Rule','Odds','Hist ROI']
+        cols = ['Date','Time','League','Home','Away','Market','6G xG','Supremacy','Draw Odds','Rule','Odds','Hist ROI']
         show = show[[c for c in cols if c in show.columns]]
 
         fmt = {}
@@ -93,10 +109,11 @@ if uploaded:
         if 'Odds'  in show.columns: fmt['Odds']  = '{:.2f}'
 
         def sm(v):
-            return {"Lay U1.5":    "background-color:#D4EEF2;color:#0B5E6B;font-weight:bold",
-                    "Back O2.5":   "background-color:#D6EFE1;color:#217346;font-weight:bold",
-                    "Lay O3.5":    "background-color:#EBE0F0;color:#4A235A;font-weight:bold",
-                    "FHG Lay U0.5":"background-color:#FFF0DC;color:#B35C00;font-weight:bold"}.get(v, '')
+            return {"Lay U1.5":      "background-color:#D4EEF2;color:#0B5E6B;font-weight:bold",
+                    "Back O2.5":     "background-color:#D6EFE1;color:#217346;font-weight:bold",
+                    "Lay O3.5":      "background-color:#EBE0F0;color:#4A235A;font-weight:bold",
+                    "FHG Lay U0.5":  "background-color:#FFF0DC;color:#B35C00;font-weight:bold",
+                    "Back the Draw": "background-color:#D6EAF8;color:#1A5276;font-weight:bold"}.get(v, '')
 
         def sr2(v):
             try:
