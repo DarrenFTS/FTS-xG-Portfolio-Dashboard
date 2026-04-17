@@ -56,7 +56,7 @@ with col_title:
         'letter-spacing:-0.5px;line-height:1.1">'
         '\u26bd FTS xG Systems Dashboard</div>'
         '<div style="color:#8b949e;font-size:0.9rem;margin-top:4px">'
-        '4 systems \u00b7 30 leagues \u00b7 2,960 bets \u00b7 +20.39% blended ROI'
+        '4 systems \u00b7 30 leagues \u00b7 3,555 bets \u00b7 +20.39% blended ROI'
         '</div></div>',
         unsafe_allow_html=True
     )
@@ -65,8 +65,8 @@ st.divider()
 
 # ── KPI metrics ───────────────────────────────────────────────────────────────
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total Bets",    "2,960",       "2021-2026")
-c2.metric("Total P/L",     "+614.95 pts", "+20.78% ROI")
+c1.metric("Total Bets",    "3,555",       "2021-2026")
+c2.metric("Total P/L",     "+793.72 pts", "+22.33% ROI")
 c3.metric("Lay U1.5",      "+25.12% ROI", "7 leagues")
 c4.metric("FHG Lay U0.5",  "+25.12% ROI", "7 leagues")
 c5.metric("Lay O3.5",      "+15.36% ROI", "8 leagues")
