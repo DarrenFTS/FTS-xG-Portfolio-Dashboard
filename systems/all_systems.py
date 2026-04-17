@@ -198,14 +198,17 @@ class BackO25System(BaseSystem):
     """
     Back Over 2.5 Goals
     7 leagues · 519 bets · +87.11 pts · +16.78% ROI
-    Filter: Match xG (Col N) >= threshold · Back odds (Col BL) 1.50–2.50
+    Filter: Match xG (Col N) >= threshold
+    Qualifying odds: 1.50–2.50 | Buffer for daily shortlist: 1.40–2.80
     """
     system_key   = 'Back_O25'
     system_label = 'Back O2.5'
     bet_type     = 'BACK'
     xg_col       = 'g6_match_xg'
     odds_col     = 'o25_back'
-    odds_min, odds_max = 1.5, 2.5
+    odds_min, odds_max = 1.40, 2.80  # Buffer range for shortlist
+    ODDS_QUALIFY_MIN   = 1.50        # Hard qualifying bounds
+    ODDS_QUALIFY_MAX   = 2.50
     leagues = {
         "Irish Premier League":    ('>=', 3.75),  # +36.88% ROI  3/4 seasons
         "English Championship":    ('>=', 4.75),  # +20.87% ROI  4/5 seasons
