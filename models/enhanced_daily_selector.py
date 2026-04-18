@@ -1,194 +1,316 @@
 """
 FTS xG Portfolio — Enhanced Daily Selector Excel Export
-Generates a colour-coded Excel file with all qualifying selections,
-result entry columns, and running P/L totals.
+Generates output exactly matching the Claude_Results.xlsx 'Results xG' template format.
+Two sheets: 'Results xG' (selections + result entry) and 'Results' (summary).
 """
-import pandas as pd
+import os, sys
+from datetime import datetime
+from typing import List
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
-from typing import List
-import sys, os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from systems.all_systems import BetSignal
 
-# System colours
-SYS_COLOURS = {
-    "Lay U1.5":      {"bg": "D4EEF2", "fg": "0B5E6B", "hdr": "0B5E6B"},
-    "Back O2.5":     {"bg": "D6EFE1", "fg": "217346", "hdr": "217346"},
-    "Lay O3.5":      {"bg": "EBE0F0", "fg": "4A235A", "hdr": "4A235A"},
-    "FHG Lay U0.5":  {"bg": "FFF0DC", "fg": "B35C00", "hdr": "B35C00"},
-    "Back the Draw": {"bg": "D6EAF8", "fg": "1A5276", "hdr": "1A5276"},
+# ── System colours (exact from template) ─────────────────────────────────────
+SYS_CONFIG = {
+    "Lay U1.5":      {"col": 12, "bg": "D4EEF2", "hdr": "0B5E6B"},
+    "Back O2.5":     {"col": 13, "bg": "D6EFE1", "hdr": "217346"},
+    "Lay O3.5":      {"col": 14, "bg": "EBE0F0", "hdr": "4A235A"},
+    "FHG Lay U0.5":  {"col": 15, "bg": "FFF0DC", "hdr": "B35C00"},
+    "Back the Draw": {"col": 16, "bg": "D6EAF8", "hdr": "0070C0"},
 }
-DEFAULT_CLR = {"bg": "F5F5F5", "fg": "333333", "hdr": "333333"}
 
-def thin_border():
-    s = Side(style="thin", color="CCCCCC")
+# Header background colours matching template exactly
+HDR_NAVY   = "0D2B55"
+HDR_TEAL   = "0B5E6B"
+HDR_BLUE   = "1A5C9E"
+HDR_DARKBL = "0D2B55"
+INACTIVE   = "F0F0F0"  # inactive result cells
+ROW_TOTAL  = "EEF4FF"
+MONTH_CLR  = "EEF4FF"
+CUM_CLR    = "F2F6FB"
+DATE_GREEN = "92D050"  # default date cell colour (result filled in later)
+
+def _thin(color="CCCCCC"):
+    s = Side(style="thin", color=color)
     return Border(left=s, right=s, top=s, bottom=s)
 
+def _fmt_date(val):
+    """Return DD/MM/YYYY string, strip time component."""
+    if not val or val in ('', 'nan', 'None'):
+        return ''
+    try:
+        if isinstance(val, datetime):
+            return val.strftime('%d/%m/%Y')
+        s = str(val).strip()
+        # Already DD/MM/YYYY
+        if len(s) == 10 and s[2] == '/' and s[5] == '/':
+            return s
+        # YYYY-MM-DD
+        if len(s) >= 10 and s[4] == '-':
+            return datetime.strptime(s[:10], '%Y-%m-%d').strftime('%d/%m/%Y')
+        return s
+    except Exception:
+        return str(val).split(' ')[0].split('T')[0]
+
+def _fmt_time(val):
+    """Return HH:MM string only."""
+    if not val or val in ('', 'nan', 'None'):
+        return ''
+    s = str(val).strip()
+    # Remove date part if present
+    if ' ' in s:
+        s = s.split(' ')[-1]
+    # Strip seconds
+    parts = s.split(':')
+    if len(parts) >= 2:
+        return f"{parts[0]}:{parts[1]}"
+    return s
+
+
 def export_to_excel(signals: List[BetSignal], filepath: str, date_str: str):
-    """Export qualifying selections to colour-coded Excel with result columns."""
     wb = Workbook()
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # SHEET 1: Results xG  — exact template match
+    # ══════════════════════════════════════════════════════════════════════════
     ws = wb.active
-    ws.title = "Selections"
+    ws.title = "Results xG"
     ws.sheet_view.showGridLines = False
 
-    # ── Title row ─────────────────────────────────────────────────────────────
-    ws.merge_cells("A1:S1")
-    title_cell = ws["A1"]
-    title_cell.value = f"FTS xG Portfolio — Daily Selections — {date_str}"
-    title_cell.font = Font(name="Arial", bold=True, size=13, color="FFFFFF")
-    title_cell.fill = PatternFill("solid", start_color="0D2B55")
-    title_cell.alignment = Alignment(horizontal="center", vertical="center")
-    ws.row_dimensions[1].height = 28
+    # ── Column widths (matching template) ─────────────────────────────────────
+    col_widths = {
+        'A': 2.0,  'B': 12.0, 'C': 8.0,  'D': 25.0, 'E': 20.0,
+        'F': 13.0, 'G': 17.0, 'H': 8.0,  'I': 21.5, 'J': 8.0,
+        'K': 10.0, 'L': 14.8, 'M': 13.0, 'N': 13.0, 'O': 13.0,
+        'P': 13.0, 'Q': 10.0, 'R': 13.0, 'S': 12.0, 'T': 8.7,
+    }
+    for col, width in col_widths.items():
+        ws.column_dimensions[col].width = width
 
-    # ── Column headers ────────────────────────────────────────────────────────
-    # Main selection columns + result entry columns for each system
-    HEADERS = [
-        ("A", "Date",        12),
-        ("B", "Time",         8),
-        ("C", "League",      22),
-        ("D", "Home",        20),
-        ("E", "Away",        20),
-        ("F", "System",      16),
-        ("G", "6G xG / Sup", 12),
-        ("H", "Rule",        22),
-        ("I", "Odds",         8),
-        ("J", "Hist ROI",     9),
-        # Result entry columns — one per system + BtD
-        ("K", "U1.5 Result",  11),
-        ("L", "U1.5 P/L",     9),
-        ("M", "O2.5 Result",  11),
-        ("N", "O2.5 P/L",     9),
-        ("O", "O3.5 Result",  11),
-        ("P", "O3.5 P/L",     9),
-        ("Q", "FHG Result",   11),
-        ("R", "FHG P/L",      9),
-        ("S", "BtD Result",   11),
-        ("T", "BtD P/L",      9),
+    # ── Row 1: Title + system totals ──────────────────────────────────────────
+    ws.row_dimensions[1].height = 21.75
+    ws.merge_cells("B1:K1")
+    c = ws['B1']
+    c.value = f"FTS xG DAILY SELECTIONS  —  {date_str}"
+    c.font = Font(name="Arial", bold=True, size=12, color="FFFFFF")
+    c.fill = PatternFill("solid", start_color=HDR_NAVY)
+    c.alignment = Alignment(horizontal="left", vertical="center")
+
+    # System total formulas in result columns (row 1)
+    n = len(signals)
+    last_data = n + 2  # row 1=title, row 2=headers, data starts row 3
+    total_configs = [
+        ('L', "=SUM(L3:L65)"),
+        ('M', "=SUM(M3:M65)"),
+        ('N', "=SUM(N3:N65)"),
+        ('O', "=SUM(O3:O65)"),
+        ('P', "=SUM(P3:P65)"),
+        ('Q', "=SUM(L1:P1)"),
+        ('T', "=SUM(Q1*10)"),
     ]
+    sys_hdr_colors = {
+        'L': "0B5E6B", 'M': "217346", 'N': "4A235A",
+        'O': "B35C00", 'P': "0070C0", 'Q': HDR_BLUE, 'T': HDR_NAVY,
+    }
+    for col_letter, formula in total_configs:
+        c = ws[f'{col_letter}1']
+        c.value = formula
+        c.font = Font(name="Arial", bold=True, size=11, color="FFFFFF")
+        c.fill = PatternFill("solid", start_color=sys_hdr_colors.get(col_letter, HDR_NAVY))
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
 
-    HDR_FILL = PatternFill("solid", start_color="1F6FEB")
-    HDR_FONT = Font(name="Arial", bold=True, size=10, color="FFFFFF")
-    HDR_ALIGN = Alignment(horizontal="center", vertical="center", wrap_text=True)
-
-    for col_letter, header, width in HEADERS:
-        c = ws[f"{col_letter}2"]
-        c.value = header
-        c.font = HDR_FONT
-        c.fill = HDR_FILL
-        c.alignment = HDR_ALIGN
-        c.border = thin_border()
-        ws.column_dimensions[col_letter].width = width
-    ws.row_dimensions[2].height = 24
+    # ── Row 2: Column headers ─────────────────────────────────────────────────
+    ws.row_dimensions[2].height = 18.0
+    headers = [
+        ('B', "Date",           HDR_NAVY),
+        ('C', "Time",           HDR_NAVY),
+        ('D', "League",         HDR_NAVY),
+        ('E', "Home",           HDR_NAVY),
+        ('F', "Away",           HDR_NAVY),
+        ('G', "Market",         HDR_NAVY),
+        ('H', "6G xG",          HDR_TEAL),
+        ('I', "Rule",           HDR_TEAL),
+        ('J', "Odds",           HDR_BLUE),
+        ('K', "Hist ROI",       HDR_BLUE),
+        ('L', "Lay U1.5",       "0B5E6B"),
+        ('M', "Back O2.5",      "217346"),
+        ('N', "Lay O3.5",       "4A235A"),
+        ('O', "FHG Lay U0.5",   "B35C00"),
+        ('P', "Back the Draw",  "0070C0"),
+        ('Q', "Row Total",      HDR_BLUE),
+        ('R', "Month",          HDR_BLUE),
+        ('S', "Cumulative",     HDR_NAVY),
+        ('T', "\u00a3",         HDR_NAVY),
+    ]
+    for col_letter, label, bg in headers:
+        c = ws[f'{col_letter}2']
+        c.value = label
+        c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
+        c.fill = PatternFill("solid", start_color=bg)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
 
     # ── Data rows ─────────────────────────────────────────────────────────────
-    for row_idx, sig in enumerate(signals, start=3):
-        clr = SYS_COLOURS.get(sig.system, DEFAULT_CLR)
-        bg  = PatternFill("solid", start_color=clr["bg"])
-        fg  = clr["fg"]
-        bdr = thin_border()
+    for i, sig in enumerate(signals):
+        row = i + 3
+        ws.row_dimensions[row].height = 16.5
+        cfg = SYS_CONFIG.get(sig.system, {"col": 12, "bg": "F0F0F0", "hdr": "333333"})
+        sys_col = cfg["col"]
+        sys_bg  = cfg["bg"]
+        is_btd  = sig.system == "Back the Draw"
 
-        is_btd = sig.system == "Back the Draw"
+        # Format date and time cleanly
+        date_str_fmt = _fmt_date(sig.date)
+        time_str_fmt = _fmt_time(sig.time)
 
-        row_data = [
-            sig.date,
-            sig.time,
-            sig.league,
-            sig.home,
-            sig.away,
-            sig.system,
-            sig.xg_value,
-            sig.rule,
-            sig.odds,
-            f"+{sig.hist_roi:.1f}%" if sig.hist_roi >= 0 else f"{sig.hist_roi:.1f}%",
+        # ── Columns B–K: match info ───────────────────────────────────────────
+        match_data = [
+            ('B', date_str_fmt,  "left",   False, DATE_GREEN),
+            ('C', time_str_fmt,  "center", False, "FFFFFF"),
+            ('D', sig.league,    "left",   False, "FFFFFF"),
+            ('E', sig.home,      "left",   False, "FFFFFF"),
+            ('F', sig.away,      "left",   False, "FFFFFF"),
+            ('G', sig.system,    "center", True,  cfg["hdr"]),
+            ('H', sig.xg_value,  "center", False, "FFFFFF"),
+            ('I', sig.rule,      "center", False, "FFFFFF"),
+            ('J', sig.odds,      "center", False,
+                  "FFF0DC" if is_btd and sig.odds < 3.60 else "FFFFFF"),
+            ('K', f"+{sig.hist_roi:.2f}%" if sig.hist_roi >= 0 else f"{sig.hist_roi:.2f}%",
+                  "center", False, "FFFFFF"),
         ]
+        for col_letter, val, align, bold, bg in match_data:
+            c = ws[f'{col_letter}{row}']
+            c.value = val
+            c.font = Font(name="Arial", bold=bold, size=11,
+                          color="FFFFFF" if col_letter == 'G' else "000000")
+            c.fill = PatternFill("solid", start_color=bg)
+            c.alignment = Alignment(horizontal=align, vertical="center")
+            c.border = _thin()
 
-        for col_idx, val in enumerate(row_data, start=1):
-            c = ws.cell(row_idx, col_idx, val)
-            c.font  = Font(name="Arial", size=10, color=fg,
-                           bold=(col_idx == 6))  # bold system name
-            c.fill  = bg
-            c.border = bdr
-            c.alignment = Alignment(
-                horizontal="center" if col_idx not in [3,4,5,8] else "left",
-                vertical="center"
-            )
-
-        # Odds formatting
-        odds_cell = ws.cell(row_idx, 9)
-        if is_btd and sig.odds < 3.60:
-            # Buffer zone — amber highlight
-            odds_cell.fill = PatternFill("solid", start_color="FFF0DC")
-            odds_cell.font = Font(name="Arial", size=10, bold=True, color="B35C00")
-        else:
-            odds_cell.fill = bg
-
-        # Result entry columns (blank, user fills in)
-        result_cols = {
-            "Lay U1.5":      (11, 12),
-            "Back O2.5":     (13, 14),
-            "Lay O3.5":      (15, 16),
-            "FHG Lay U0.5":  (17, 18),
-            "Back the Draw": (19, 20),
-        }
-        active_result_col, active_pl_col = result_cols.get(sig.system, (None, None))
-
-        for col_num in range(11, 21):
-            c = ws.cell(row_idx, col_num)
-            if col_num == active_result_col:
-                # Active result entry cell
-                c.fill = PatternFill("solid", start_color="FFFDE7")
-                c.font = Font(name="Arial", size=10)
-                c.alignment = Alignment(horizontal="center", vertical="center")
-                c.border = Border(
-                    left=Side(style="medium", color=clr["hdr"]),
-                    right=Side(style="thin", color="CCCCCC"),
-                    top=Side(style="thin", color="CCCCCC"),
-                    bottom=Side(style="thin", color="CCCCCC"),
-                )
-            elif col_num == active_pl_col:
-                # Active P/L entry cell
-                c.fill = PatternFill("solid", start_color="E8F8F5")
-                c.font = Font(name="Arial", size=10)
-                c.alignment = Alignment(horizontal="center", vertical="center")
-                c.border = Border(
-                    right=Side(style="medium", color=clr["hdr"]),
-                    left=Side(style="thin", color="CCCCCC"),
-                    top=Side(style="thin", color="CCCCCC"),
-                    bottom=Side(style="thin", color="CCCCCC"),
-                )
+        # ── Columns L–P: result entry cells ───────────────────────────────────
+        for col_num in range(12, 17):
+            c = ws.cell(row, col_num)
+            if col_num == sys_col:
+                # Active result cell — use system colour
+                c.fill = PatternFill("solid", start_color=sys_bg)
             else:
-                # Inactive — light grey
-                c.fill = PatternFill("solid", start_color="F5F5F5")
-                c.border = thin_border()
-            ws.row_dimensions[row_idx].height = 18
+                # Inactive — grey
+                c.fill = PatternFill("solid", start_color=INACTIVE)
+            c.font = Font(name="Arial", size=11)
+            c.alignment = Alignment(horizontal="center", vertical="center")
+            c.border = _thin()
 
-    # ── Totals row ─────────────────────────────────────────────────────────────
-    if signals:
-        tot_row = len(signals) + 3
-        ws.merge_cells(f"A{tot_row}:J{tot_row}")
-        tc = ws[f"A{tot_row}"]
-        tc.value = f"Total Selections: {len(signals)}"
-        tc.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
-        tc.fill = PatternFill("solid", start_color="0D2B55")
-        tc.alignment = Alignment(horizontal="center", vertical="center")
-        tc.border = thin_border()
-        ws.row_dimensions[tot_row].height = 20
+        # ── Columns Q–T: running totals ────────────────────────────────────────
+        # Q: Row total
+        c = ws.cell(row, 17)
+        c.value = f"=SUM(L{row}:P{row})"
+        c.font = Font(name="Arial", bold=True, size=11)
+        c.fill = PatternFill("solid", start_color=ROW_TOTAL)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
 
-        # P/L sum formulas for each system result column
-        pl_cols = [12, 14, 16, 18, 20]
-        pl_labels = ["U1.5", "O2.5", "O3.5", "FHG", "BtD"]
-        for pl_col, lbl in zip(pl_cols, pl_labels):
-            col_letter = get_column_letter(pl_col)
-            c = ws.cell(tot_row, pl_col)
-            c.value = f"=SUM({col_letter}3:{col_letter}{tot_row-1})"
-            c.font = Font(name="Arial", bold=True, size=10)
-            c.fill = PatternFill("solid", start_color="E8F5E9")
-            c.alignment = Alignment(horizontal="center")
-            c.border = thin_border()
+        # R: Month running total
+        c = ws.cell(row, 18)
+        if row == 3:
+            c.value = f'=IF(Q{row}=0,"",Q{row})'
+        else:
+            c.value = f"=SUM(R{row-1}+Q{row})"
+        c.font = Font(name="Arial", bold=True, size=11)
+        c.fill = PatternFill("solid", start_color=MONTH_CLR)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
 
-    # ── Freeze panes ──────────────────────────────────────────────────────────
-    ws.freeze_panes = "A3"
+        # S: Cumulative
+        c = ws.cell(row, 19)
+        if row == 3:
+            c.value = f'=IF(Q{row}=0,"",Q{row})'
+        else:
+            c.value = f"=SUM(S{row-1}+Q{row})"
+        c.font = Font(name="Arial", bold=True, size=11)
+        c.fill = PatternFill("solid", start_color=CUM_CLR)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
+
+        # T: £ value (cumulative × 10)
+        c = ws.cell(row, 20)
+        c.value = f"=SUM(S{row}*10)"
+        c.font = Font(name="Arial", bold=True, size=11)
+        c.fill = PatternFill("solid", start_color=CUM_CLR)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
+
+    ws.freeze_panes = "B3"
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # SHEET 2: Results (summary by system)
+    # ══════════════════════════════════════════════════════════════════════════
+    ws2 = wb.create_sheet("Results")
+    ws2.sheet_view.showGridLines = False
+
+    from collections import Counter
+    mc = Counter(s.system for s in signals)
+
+    ws2.column_dimensions['A'].width = 22
+    ws2.column_dimensions['B'].width = 10
+    ws2.column_dimensions['C'].width = 10
+    ws2.column_dimensions['D'].width = 12
+
+    ws2.merge_cells("A1:D1")
+    c = ws2['A1']
+    c.value = "Daily Summary"
+    c.font = Font(name="Arial", bold=True, size=12, color="FFFFFF")
+    c.fill = PatternFill("solid", start_color=HDR_NAVY)
+    c.alignment = Alignment(horizontal="center", vertical="center")
+    ws2.row_dimensions[1].height = 24
+
+    for col, label in zip(['A','B','C','D'],["System","Bets","P/L","Buffer?"]):
+        c = ws2[f'{col}2']
+        c.value = label
+        c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
+        c.fill = PatternFill("solid", start_color=HDR_BLUE)
+        c.alignment = Alignment(horizontal="center", vertical="center")
+        c.border = _thin()
+
+    sys_order = ["Lay U1.5","Back O2.5","Lay O3.5","FHG Lay U0.5","Back the Draw"]
+    for i, sys_name in enumerate(sys_order):
+        r = i + 3
+        cfg = SYS_CONFIG.get(sys_name, {"bg":"F0F0F0","hdr":"333333"})
+        count = mc.get(sys_name, 0)
+        # Flag buffer zone bets for BTD
+        buf_count = sum(1 for s in signals if s.system == sys_name
+                        and sys_name == "Back the Draw" and s.odds < 3.60)
+
+        for col, val in zip(['A','B','C','D'],[
+            sys_name, count,
+            f"=Selections!{get_column_letter(SYS_CONFIG[sys_name]['col'])}1" if sys_name in SYS_CONFIG else "—",
+            f"{buf_count} in buffer" if buf_count > 0 else "—"
+        ]):
+            c = ws2.cell(r, ord(col)-64, val)
+            c.font = Font(name="Arial", size=10,
+                          bold=(col=='A'),
+                          color="FFFFFF" if col=='A' else "000000")
+            c.fill = PatternFill("solid", start_color=cfg["hdr"] if col=='A' else cfg["bg"])
+            c.alignment = Alignment(horizontal="left" if col=='A' else "center",
+                                    vertical="center")
+            c.border = _thin()
+        ws2.row_dimensions[r].height = 18
+
+    # Total row
+    tot_row = len(sys_order) + 3
+    ws2.merge_cells(f"A{tot_row}:B{tot_row}")
+    c = ws2[f'A{tot_row}']
+    c.value = f"Total Selections: {len(signals)}"
+    c.font = Font(name="Arial", bold=True, size=10, color="FFFFFF")
+    c.fill = PatternFill("solid", start_color=HDR_NAVY)
+    c.alignment = Alignment(horizontal="center", vertical="center")
+    c.border = _thin()
+
+    # Rename sheet1 for cross-reference
+    ws.title = "Selections"
+    ws2.title = "Results"
 
     wb.save(filepath)
