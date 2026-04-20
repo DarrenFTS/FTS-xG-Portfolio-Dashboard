@@ -191,7 +191,9 @@ CUM_ENDPOINTS = {
 @st.cache_data
 def load_master_sheet():
     import json, os
-    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "portfolio_master_sheet.json")
+    # pages/ -> dashboard/ -> repo root -> data/
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    path = os.path.join(repo_root, "data", "portfolio_master_sheet.json")
     with open(path) as f:
         records = json.load(f)
     df = pd.DataFrame(records)
