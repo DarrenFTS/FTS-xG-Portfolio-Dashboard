@@ -406,10 +406,18 @@ def render_system_tab(tab, sys_name):
                  <div style="font-weight:600">{d['avg_odds']}</div></div>
         </div>""", unsafe_allow_html=True)
 
-        # Cumulative P&L chart
-        st.subheader("Cumulative P&L Curve")
+        # Cumulative P&L + Drawdown — dual-axis single chart
+        st.subheader("Cumulative P&L & Drawdown")
         dates, values = build_cum_curve(sys_name)
+
+        import numpy as np
+        vals_arr = np.array(values, dtype=float)
+        peak_arr = np.maximum.accumulate(vals_arr)
+        dd_arr   = (vals_arr - peak_arr).tolist()   # always <= 0
+
         fig_cum = go.Figure()
+
+        # P&L line — left y-axis (y1)
         fig_cum.add_trace(go.Scatter(
             x=dates, y=values,
             fill="tozeroy",
@@ -417,16 +425,50 @@ def render_system_tab(tab, sys_name):
             fillcolor=hex_alpha(color, 0.13),
             mode="lines",
             name=sys_name,
-            hovertemplate="Date: %{x}<br>P&L: %{y:.2f} pts<extra></extra>",
+            yaxis="y1",
+            hovertemplate="P&L: %{y:.2f} pts<extra></extra>",
         ))
-        fig_cum.add_hline(y=0, line_dash="dot", line_color="#30363d")
+
+        # Drawdown line — right y-axis (y2)
+        fig_cum.add_trace(go.Scatter(
+            x=dates, y=dd_arr,
+            line=dict(color="#f85149", width=1.5),
+            mode="lines",
+            name="Drawdown",
+            yaxis="y2",
+            hovertemplate="DD: %{y:.2f} pts<extra></extra>",
+        ))
+
         fig_cum.update_layout(
-            height=360, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            height=380,
+            plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
             font=dict(color="#e6edf3"),
-            xaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True),
-            yaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True, title="Cumulative P&L (pts)"),
-            showlegend=False, hovermode="x unified",
-            margin=dict(t=10, b=40, l=60, r=20),
+            hovermode="x unified",
+            showlegend=True,
+            legend=dict(
+                orientation="v", x=1.08, y=1,
+                font=dict(size=11), bgcolor="rgba(0,0,0,0)",
+            ),
+            margin=dict(t=20, b=40, l=65, r=75),
+            xaxis=dict(
+                gridcolor="rgba(48,54,61,0.27)", showgrid=True,
+            ),
+            yaxis=dict(
+                title=dict(text="Cumulative P&L (units)", font=dict(color=color)),
+                tickfont=dict(color=color),
+                gridcolor="rgba(48,54,61,0.27)", showgrid=True,
+                side="left",
+            ),
+            yaxis2=dict(
+                title=dict(text="Drawdown (u)", font=dict(color="#f85149")),
+                tickfont=dict(color="#f85149"),
+                overlaying="y",
+                side="right",
+                showgrid=False,
+                zeroline=True,
+                zerolinecolor="rgba(248,81,73,0.25)",
+                zerolinewidth=1,
+            ),
         )
         st.plotly_chart(fig_cum, use_container_width=True)
 
@@ -439,9 +481,29 @@ def render_system_tab(tab, sys_name):
                                           key=f"sm_{sys_name}")
             metric_map = {"P&L (pts)":"pl","Bets":"bets","Avg xG":"avg_xg","Avg Odds":"avg_odds"}
             m = metric_map[season_metric]
-            seasons = d["seasons"]
-            s_labels = [s["Season"] for s in seasons]
-            s_vals   = [s[m] for s in seasons]
+
+            # Merge calendar-year seasons into adjacent winter seasons
+            # '2022'→'2022-2023', '2023'→'2023-2024', '2024'→'2024-2025', '2025'→'2025-2026'
+            CAL_MERGE = {"2022":"2022-2023","2023":"2023-2024","2024":"2024-2025","2025":"2025-2026"}
+            merged = {}
+            for s in d["seasons"]:
+                lbl = CAL_MERGE.get(s["Season"], s["Season"])
+                if lbl not in merged:
+                    merged[lbl] = {"Season":lbl,"pl":0,"bets":0,"avg_xg":[],"avg_odds":[]}
+                merged[lbl]["pl"]    += s["pl"]
+                merged[lbl]["bets"]  += s["bets"]
+                merged[lbl]["avg_xg"].append(s.get("avg_xg",0))
+                merged[lbl]["avg_odds"].append(s.get("avg_odds",0))
+            for lbl in merged:
+                xgs   = [v for v in merged[lbl]["avg_xg"]   if v]
+                odds  = [v for v in merged[lbl]["avg_odds"]  if v]
+                merged[lbl]["avg_xg"]   = round(sum(xgs)/len(xgs),3)   if xgs   else 0
+                merged[lbl]["avg_odds"] = round(sum(odds)/len(odds),3)  if odds  else 0
+            season_order = ["2021-2022","2022-2023","2023-2024","2024-2025","2025-2026"]
+            seasons_merged = [merged[k] for k in season_order if k in merged]
+
+            s_labels = [s["Season"] for s in seasons_merged]
+            s_vals   = [s[m] for s in seasons_merged]
             s_colors = ['rgba(63,185,80,0.67)' if v >= 0 else 'rgba(248,81,73,0.53)' for v in s_vals] if m == "pl" else [hex_alpha(color)]*len(s_vals)
             s_borders= ["#3fb950" if v >= 0 else "#f85149" for v in s_vals] if m == "pl" else [color]*len(s_vals)
 
@@ -456,9 +518,9 @@ def render_system_tab(tab, sys_name):
             fig_s.update_layout(
                 height=320, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
                 font=dict(color="#e6edf3"), showlegend=False,
-                xaxis=dict(gridcolor="rgba(48,54,61,0.27)", tickangle=45),
+                xaxis=dict(gridcolor="rgba(48,54,61,0.27)", tickangle=0),
                 yaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
-                margin=dict(t=30, b=80, l=60, r=20),
+                margin=dict(t=30, b=60, l=60, r=20),
             )
             st.plotly_chart(fig_s, use_container_width=True)
 
