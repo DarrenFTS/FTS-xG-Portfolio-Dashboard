@@ -1,6 +1,7 @@
 """Page 5: Results Dashboard — Historical performance with cumulative P&L curves"""
 import streamlit as st
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
