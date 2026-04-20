@@ -187,33 +187,30 @@ CUM_ENDPOINTS = {
     "Back the Draw":{"start":"2022-08-07","end":"2026-03-22","final":178.77},
 }
 
-# Full cum series embedded from the HTML (we'll use season data to build a
-# representative cumulative curve per system)
+# ── Load full bet-by-bet master sheet for accurate cum + drawdown ─────────────
+@st.cache_data
+def load_master_sheet():
+    import json, os
+    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "portfolio_master_sheet.json")
+    with open(path) as f:
+        records = json.load(f)
+    df = pd.DataFrame(records)
+    df["date"] = pd.to_datetime(df["date"])
+    return df.sort_values("date")
+
 def build_cum_curve(sys_name):
-    """Build cumulative P&L from season data as a stepped approximation."""
-    d = SYSTEM_DATA[sys_name]
-    seasons = d["seasons"]
-    # Map season labels to approximate mid-year dates
-    date_map = {
-        "2021-2022": ("2021-08-01", "2022-05-31"),
-        "2022":      ("2022-06-01", "2022-12-31"),
-        "2022-2023": ("2022-08-01", "2023-05-31"),
-        "2023":      ("2023-06-01", "2023-12-31"),
-        "2023-2024": ("2023-08-01", "2024-05-31"),
-        "2024":      ("2024-06-01", "2024-12-31"),
-        "2024-2025": ("2024-08-01", "2025-05-31"),
-        "2025":      ("2025-06-01", "2025-12-31"),
-        "2025-2026": ("2025-08-01", "2026-03-22"),
-    }
-    dates, values = ["2021-07-01"], [0.0]
-    running = 0.0
-    for s in seasons:
-        label = s["Season"]
-        _, end = date_map.get(label, ("2021-08-01","2022-05-31"))
-        running += s["pl"]
-        dates.append(end)
-        values.append(round(running, 2))
-    return dates, values
+    """Return (dates, cum_pl, drawdown) from full bet-by-bet data."""
+    df = load_master_sheet()
+    sub = df[df["system"] == sys_name].sort_values("date").reset_index(drop=True)
+    cum  = sub["pl"].cumsum().values
+    peak = np.maximum.accumulate(cum)
+    dd   = cum - peak
+    dates = sub["date"].dt.strftime("%Y-%m-%d").tolist()
+    return (
+        dates,
+        [round(float(x), 2) for x in cum],
+        [round(float(x), 2) for x in dd],
+    )
 
 # ── Page header ───────────────────────────────────────────────────────────────
 st.title("📉 Results Dashboard")
@@ -263,7 +260,7 @@ with tab_overview:
     fig_all = go.Figure()
     for sys in SYSTEMS:
         d = SYSTEM_DATA[sys]
-        dates, values = build_cum_curve(sys)
+        dates, values, _ = build_cum_curve(sys)
         fig_all.add_trace(go.Scatter(
             x=dates, y=values,
             name=sys,
@@ -408,12 +405,7 @@ def render_system_tab(tab, sys_name):
 
         # Cumulative P&L + Drawdown — dual-axis single chart
         st.subheader("Cumulative P&L & Drawdown")
-        dates, values = build_cum_curve(sys_name)
-
-        import numpy as np
-        vals_arr = np.array(values, dtype=float)
-        peak_arr = np.maximum.accumulate(vals_arr)
-        dd_arr   = (vals_arr - peak_arr).tolist()   # always <= 0
+        dates, values, dd_arr = build_cum_curve(sys_name)
 
         fig_cum = go.Figure()
 
