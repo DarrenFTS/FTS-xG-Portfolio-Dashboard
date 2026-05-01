@@ -50,7 +50,7 @@ div[class*="stHeading"] h3 { color: #ffffff !important; }
 # ── Embedded historical data ──────────────────────────────────────────────────
 SYSTEM_DATA = {
     "Lay U1.5": {
-        "total_pl": 215.53, "total_bets": 858, "max_dd": -16.46,
+        "total_pl": 211.17, "total_bets": 881, "max_dd": -17.44,
         "dd_start": "2021-07-31", "dd_end": "2021-10-02",
         "avg_xg": 4.184, "avg_odds": 4.63,
         "color": "#58a6ff",
@@ -76,7 +76,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back O2.5": {
-        "total_pl": 87.11, "total_bets": 519, "max_dd": -8.47,
+        "total_pl": 88.21, "total_bets": 529, "max_dd": -8.47,
         "dd_start": "2023-10-28", "dd_end": "2023-11-25",
         "avg_xg": 4.844, "avg_odds": 1.818,
         "color": "#3fb950",
@@ -102,9 +102,9 @@ SYSTEM_DATA = {
         ],
     },
     "Lay O3.5": {
-        "total_pl": 137.98, "total_bets": 889, "max_dd": -20.16,
+        "total_pl": 143.80, "total_bets": 915, "max_dd": -21.14,
         "dd_start": "2022-03-14", "dd_end": "2022-05-08",
-        "avg_xg": 2.588, "avg_odds": 3.48,
+        "avg_xg": 2.385, "avg_odds": 3.556,
         "color": "#ffa657",
         "seasons": [
             {"Season":"2021-2022","pl":  1.15,"bets":188,"avg_xg":2.300,"avg_odds":3.682},
@@ -124,7 +124,7 @@ SYSTEM_DATA = {
         ],
     },
     "FHG Lay U0.5": {
-        "total_pl": 174.33, "total_bets": 694, "max_dd": -12.37,
+        "total_pl": 163.84, "total_bets": 714, "max_dd": -12.37,
         "dd_start": "2024-12-06", "dd_end": "2025-04-06",
         "avg_xg": 2.811, "avg_odds": 4.018,
         "color": "#bc8cff",
@@ -146,7 +146,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back the Draw": {
-        "total_pl": 178.77, "total_bets": 595, "max_dd": -25.04,
+        "total_pl": 173.56, "total_bets": 604, "max_dd": -26.04,
         "dd_start": "2023-09-03", "dd_end": "2023-09-15",
         "avg_xg": 0.387, "avg_odds": 3.992,
         "color": "#4A90D9",
@@ -181,11 +181,11 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 # ── Cumulative P&L series (from embedded HTML data) ───────────────────────────
 # Key points only — enough to draw accurate curves
 CUM_ENDPOINTS = {
-    "Lay U1.5":    {"start":"2021-07-23","end":"2026-03-22","final":215.53},
-    "Back O2.5":   {"start":"2021-08-16","end":"2026-03-22","final": 87.11},
-    "Lay O3.5":    {"start":"2021-07-27","end":"2026-03-22","final":137.98},
-    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-03-22","final":174.33},
-    "Back the Draw":{"start":"2022-08-07","end":"2026-03-22","final":178.77},
+    "Lay U1.5":    {"start":"2021-07-23","end":"2026-04-30","final":211.17},
+    "Back O2.5":   {"start":"2021-08-16","end":"2026-04-30","final": 87.11},
+    "Lay O3.5":    {"start":"2021-07-27","end":"2026-04-30","final":143.80},
+    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-04-30","final":163.84},
+    "Back the Draw":{"start":"2022-08-07","end":"2026-04-30","final":173.56},
 }
 
 # ── Load full bet-by-bet master sheet for accurate cum + drawdown ─────────────
