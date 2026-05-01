@@ -58,7 +58,7 @@ if uploaded:
             signals  = scan_all_systems(fixtures)
             df_sel   = signals_to_dataframe(signals)
             # Add extra BTD columns from fixtures for Back the Draw signals
-            if 'supremacy' in fixtures.columns and 'draw_odds' in fixtures.columns:
+            if not df_sel.empty and 'supremacy' in fixtures.columns and 'draw_odds' in fixtures.columns:
                 btd_mask = df_sel['Market'] == 'Back the Draw'
                 if btd_mask.any():
                     # Match by home/away to get supremacy and draw_odds
