@@ -38,7 +38,7 @@ div[class*="stHeading"] h2,
 div[class*="stHeading"] h3 { color: #ffffff !important; }
 </style>""", unsafe_allow_html=True)
 
-MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00"}
+MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
 
 @st.cache_data(ttl=300)
 def load_data():
@@ -93,6 +93,29 @@ fig.update_layout(height=360, template='plotly_white',
     legend=dict(orientation='h', y=-0.18),
     margin=dict(l=0,r=0,t=10,b=50), yaxis_title="P/L (pts)")
 st.plotly_chart(fig, use_container_width=True)
+
+# Drawdown chart
+st.subheader("📉 Portfolio Drawdown")
+dd_fig = go.Figure()
+for mkt, col in MKT.items():
+    sub = cd[cd['system'] == mkt].sort_values('date')
+    if len(sub):
+        c2 = sub['pl'].cumsum()
+        dds = c2 - c2.cummax()
+        dd_fig.add_trace(go.Scatter(
+            x=sub['date'], y=dds.values, name=mkt, mode='lines',
+            line=dict(color=col, width=1.5),
+            hovertemplate=f'<b>{mkt}</b><br>%{{x|%d %b %Y}}<br>DD: %{{y:+.2f}}<extra></extra>'))
+c2_all = cd.sort_values('date')['pl'].cumsum()
+dd_fig.add_trace(go.Scatter(
+    x=cd.sort_values('date')['date'], y=(c2_all - c2_all.cummax()).values,
+    name='Combined', mode='lines', line=dict(color='#0D2B55', width=2.5, dash='dot'),
+    hovertemplate='<b>Combined</b><br>%{x|%d %b %Y}<br>DD: %{y:+.2f}<extra></extra>'))
+dd_fig.update_layout(height=280, template='plotly_white',
+    legend=dict(orientation='h', y=-0.22), margin=dict(l=0,r=0,t=10,b=60),
+    yaxis_title="Drawdown (pts)")
+dd_fig.add_hline(y=0, line_dash='dash', line_color='grey', opacity=0.4)
+st.plotly_chart(dd_fig, use_container_width=True)
 
 # System table + bar
 cl, cr = st.columns([3, 2])
