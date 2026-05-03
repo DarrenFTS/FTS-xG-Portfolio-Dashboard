@@ -233,7 +233,7 @@ with tab_overview:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "All 4 systems combined")
     c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      "Across 5 seasons")
-    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "Lay O3.5 Mar–May 2022")
+    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "FHG Lay U0.5 Dec–Apr 2026")
     c4.metric("✅ Systems Profitable",    "5 / 5",               "100% of systems in profit")
     st.divider()
 
