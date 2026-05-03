@@ -136,6 +136,37 @@ st.plotly_chart(fr, use_container_width=True)
 
 st.divider()
 
+# Drawdown analysis
+st.subheader("📉 Drawdown by System")
+dd_rows = []
+for sys in b2['system'].unique():
+    sub = b2[b2['system']==sys].sort_values('date')
+    cum = sub['pl'].cumsum(); mdd = (cum - cum.cummax()).min()
+    dd_rows.append({'System':sys, 'Max DD':round(float(mdd),2),
+                    'Total P/L':round(float(sub['pl'].sum()),2),
+                    'Ratio':round(abs(sub['pl'].sum()/mdd),1) if mdd != 0 else 0})
+dd_df = pd.DataFrame(dd_rows).sort_values('Max DD')
+col_dd1, col_dd2 = st.columns([2,3])
+with col_dd1:
+    st.dataframe(dd_df.style.format({'Max DD':'{:.2f}','Total P/L':'{:+.2f}','Ratio':'{:.1f}x'}),
+                 use_container_width=True, hide_index=True)
+with col_dd2:
+    fig_dd = go.Figure()
+    for sys in b2['system'].unique():
+        sub = b2[b2['system']==sys].sort_values('date')
+        cum = sub['pl'].cumsum(); dds = cum - cum.cummax()
+        fig_dd.add_trace(go.Scatter(
+            x=sub['date'], y=dds.values, name=sys, mode='lines',
+            line=dict(color=MKT.get(sys,'#888'), width=1.5),
+            hovertemplate=f'<b>{sys}</b><br>%{{x|%d %b %Y}}<br>DD: %{{y:+.2f}}<extra></extra>'))
+    fig_dd.update_layout(height=300, plot_bgcolor='#0d1117', paper_bgcolor='#0d1117',
+        font=dict(color='#e6edf3'), margin=dict(l=0,r=0,t=10,b=50),
+        legend=dict(orientation='h', y=-0.25), yaxis_title="Drawdown (pts)")
+    fig_dd.add_hline(y=0, line_dash='dash', line_color='grey', opacity=0.4)
+    st.plotly_chart(fig_dd, use_container_width=True)
+
+st.divider()
+
 # Full stats table
 st.subheader("Full Stats — All Systems & Leagues")
 fs = b2.groupby(['system','league']).agg(
