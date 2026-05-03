@@ -99,8 +99,8 @@ with cr2:
     fdd = go.Figure(go.Scatter(x=ss2['date'], y=dds.values, fill='tozeroy',
         line=dict(color='#9B1C1C', width=1.5), fillcolor='rgba(155,28,28,0.15)',
         hovertemplate='%{x|%d %b %Y}<br>DD: %{y:.2f}<extra></extra>'))
-    fdd.update_layout(height=310, template='plotly_white',
-        margin=dict(l=0,r=0,t=5,b=50), yaxis_title="Drawdown (pts)")
+    fdd.update_layout(height=310, plot_bgcolor='#0d1117', paper_bgcolor='#0d1117', font=dict(color='#e6edf3'),
+        margin=dict(l=0,r=0,t=5,b=50), yaxis_title='Drawdown (pts)')
     st.plotly_chart(fdd, use_container_width=True)
 
 st.divider()
