@@ -50,7 +50,7 @@ div[class*="stHeading"] h3 { color: #ffffff !important; }
 # ── Embedded historical data ──────────────────────────────────────────────────
 SYSTEM_DATA = {
     "Lay U1.5": {
-        "total_pl": 211.17, "total_bets": 881, "max_dd": -17.44,
+        "total_pl": 211.10, "total_bets": 895, "max_dd": -17.59,
         "dd_start": "2021-07-31", "dd_end": "2021-10-02",
         "avg_xg": 4.184, "avg_odds": 4.63,
         "color": "#58a6ff",
@@ -76,7 +76,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back O2.5": {
-        "total_pl": 88.21, "total_bets": 529, "max_dd": -8.47,
+        "total_pl": 87.82, "total_bets": 540, "max_dd": -8.47,
         "dd_start": "2023-10-28", "dd_end": "2023-11-25",
         "avg_xg": 4.844, "avg_odds": 1.818,
         "color": "#3fb950",
@@ -102,7 +102,7 @@ SYSTEM_DATA = {
         ],
     },
     "Lay O3.5": {
-        "total_pl": 143.80, "total_bets": 915, "max_dd": -21.14,
+        "total_pl": 153.74, "total_bets": 938, "max_dd": -21.14,
         "dd_start": "2022-03-14", "dd_end": "2022-05-08",
         "avg_xg": 2.385, "avg_odds": 3.556,
         "color": "#ffa657",
@@ -124,7 +124,7 @@ SYSTEM_DATA = {
         ],
     },
     "FHG Lay U0.5": {
-        "total_pl": 163.84, "total_bets": 714, "max_dd": -12.37,
+        "total_pl": 166.90, "total_bets": 722, "max_dd": -12.37,
         "dd_start": "2024-12-06", "dd_end": "2025-04-06",
         "avg_xg": 2.811, "avg_odds": 4.018,
         "color": "#bc8cff",
@@ -146,7 +146,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back the Draw": {
-        "total_pl": 173.56, "total_bets": 604, "max_dd": -26.04,
+        "total_pl": 164.13, "total_bets": 629, "max_dd": -26.04,
         "dd_start": "2023-09-03", "dd_end": "2023-09-15",
         "avg_xg": 0.387, "avg_odds": 3.992,
         "color": "#4A90D9",
@@ -154,7 +154,7 @@ SYSTEM_DATA = {
             {"Season":"2022-2023","pl": 39.86,"bets":175,"avg_xg":0.391,"avg_odds":3.988},
             {"Season":"2023-2024","pl": 59.17,"bets":152,"avg_xg":0.388,"avg_odds":3.991},
             {"Season":"2024-2025","pl": 74.14,"bets":153,"avg_xg":0.385,"avg_odds":3.994},
-            {"Season":"2025-2026","pl":  5.60,"bets":115,"avg_xg":0.383,"avg_odds":3.997},
+            {"Season":"2025-2026","pl": -9.04,"bets":149,"avg_xg":0.383,"avg_odds":3.997},
         ],
         "competitions": [
             {"Competition":"Scottish Premiership",   "pl":16.29,"bets":13, "avg_xg":0.412,"avg_odds":4.102},
@@ -181,11 +181,11 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 # ── Cumulative P&L series (from embedded HTML data) ───────────────────────────
 # Key points only — enough to draw accurate curves
 CUM_ENDPOINTS = {
-    "Lay U1.5":    {"start":"2021-07-23","end":"2026-04-30","final":211.17},
-    "Back O2.5":   {"start":"2021-08-16","end":"2026-04-30","final": 87.11},
-    "Lay O3.5":    {"start":"2021-07-27","end":"2026-04-30","final":143.80},
-    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-04-30","final":163.84},
-    "Back the Draw":{"start":"2022-08-07","end":"2026-04-30","final":173.56},
+    "Lay U1.5":    {"start":"2021-07-23","end":"2026-05-30","final":211.10},
+    "Back O2.5":   {"start":"2021-08-16","end":"2026-05-30","final": 87.11},
+    "Lay O3.5":    {"start":"2021-07-27","end":"2026-05-30","final":153.74},
+    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-05-30","final":166.90},
+    "Back the Draw":{"start":"2022-08-07","end":"2026-05-30","final":164.13},
 }
 
 # ── Load full bet-by-bet master sheet for accurate cum + drawdown ─────────────
@@ -233,7 +233,7 @@ with tab_overview:
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "All 4 systems combined")
     c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      "Across 5 seasons")
-    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "FHG Lay U0.5 Dec–Apr 2026")
+    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "Back the Draw")
     c4.metric("✅ Systems Profitable",    "5 / 5",               "100% of systems in profit")
     st.divider()
 
