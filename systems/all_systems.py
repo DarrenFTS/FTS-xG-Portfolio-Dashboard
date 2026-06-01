@@ -330,18 +330,20 @@ HIST_ROI_BTD = {
 # Rule 3 gate: prior season (2024-25) 0-0 rate < 6.0%
 # Update each season from btd_00_rates.csv
 BTD_SEASON_GATE = {
-    "Belgian Premier League":    False,  # 9.00% EXCLUDED
-    "Dutch Eerste Divisie":      False,  # 6.05% EXCLUDED
-    "Dutch Eredivisie":          True,   # 3.92% QUALIFIES
-    "English Premier League":    True,   # 4.21% QUALIFIES
-    "French Ligue 1":            True,   # 4.59% QUALIFIES
-    "German Bundesliga":         False,  # 7.19% EXCLUDED
-    "German Bundesliga 2":       False,  # 7.19% EXCLUDED
-    "Italian Serie A":           False,  # 7.37% EXCLUDED
-    "Polish Ekstraklasa":        True,   # 5.88% QUALIFIES
-    "Scottish Premiership":      True,   # 4.39% QUALIFIES
-    "Spanish Primera Division":  True,   # 5.53% QUALIFIES
-    "Swiss Super League":        True,   # 4.39% QUALIFIES
+    # 2026-27 season gate — based on completed 2025-26 0-0 rates (threshold: < 6.0%)
+    # 6 qualifying | 6 excluded | Updated June 2026
+    "Belgian Premier League":    False,  # 7.50% EXCLUDED
+    "Dutch Eerste Divisie":      True,   # 3.64% QUALIFIES ← NEW
+    "Dutch Eredivisie":          True,   # 1.98% QUALIFIES
+    "English Premier League":    False,  # 7.77% EXCLUDED  ← LEAVING
+    "French Ligue 1":            False,  # 7.44% EXCLUDED  ← LEAVING
+    "German Bundesliga":         True,   # 4.53% QUALIFIES ← NEW
+    "German Bundesliga 2":       True,   # 5.76% QUALIFIES ← NEW
+    "Italian Serie A":           False,  # 9.00% EXCLUDED
+    "Polish Ekstraklasa":        False,  # 7.69% EXCLUDED  ← LEAVING
+    "Scottish Premiership":      False,  # 8.06% EXCLUDED  ← LEAVING
+    "Spanish Primera Division":  True,   # 4.14% QUALIFIES
+    "Swiss Super League":        True,   # 4.84% QUALIFIES
 }
 
 BTD_ALL_LEAGUES = list(BTD_SEASON_GATE.keys())
