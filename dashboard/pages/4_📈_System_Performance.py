@@ -54,6 +54,8 @@ st.title("📈 System Performance")
 with st.sidebar:
     st.header("Select System")
     sc = st.radio("System", list(MKT.keys()), index=0)
+    if sc == "Back the Draw":
+        st.warning("🧪 **TEST mode** — Back the Draw is paper tracking only for 2026-27. Not for live betting.")
 
 col = MKT[sc]
 sb  = bets[bets['system'] == sc].sort_values('date').copy()

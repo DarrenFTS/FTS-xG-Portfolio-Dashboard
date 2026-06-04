@@ -124,6 +124,8 @@ st.divider()
 # Rolling 50-Bet ROI
 st.subheader("Rolling 50-Bet ROI")
 rs = st.selectbox("System", list(MKT.keys()))
+if rs == "Back the Draw":
+    st.warning("🧪 **TEST mode** — Back the Draw is paper tracking only for 2026-27. Not for live betting.")
 rs_d = b2[b2['system'] == rs].sort_values('date').copy()
 rs_d['rr'] = rs_d['pl'].rolling(50, min_periods=20).mean() * 100
 fr = go.Figure(go.Scatter(x=rs_d['date'], y=rs_d['rr'].round(2), mode='lines',

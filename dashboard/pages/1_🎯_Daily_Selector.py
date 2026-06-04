@@ -49,7 +49,7 @@ st.markdown("Upload today's **FTS Advanced PreMatch Excel** file to generate qua
 uploaded = st.file_uploader("Upload FTS PreMatch file (Excel)", type=['xlsx','xls'])
 
 if uploaded:
-    with st.spinner("Running all 4 systems..."):
+    with st.spinner("Running all systems..."):
         try:
             tmp = f"/tmp/fixtures_{date.today()}.xlsx"
             with open(tmp, 'wb') as f:
@@ -81,13 +81,25 @@ if uploaded:
 
     from collections import Counter
     mc = Counter(s.system for s in signals)
-    c1,c2,c3,c4,c5,c6 = st.columns(6)
-    c1.metric("Selections",    len(signals))
-    c2.metric("Lay U1.5",      mc.get('Lay U1.5', 0))
-    c3.metric("Back O2.5",     mc.get('Back O2.5', 0))
-    c4.metric("Lay O3.5",      mc.get('Lay O3.5', 0))
-    c5.metric("FHG Lay U0.5",  mc.get('FHG Lay U0.5', 0))
-    c6.metric("Back the Draw", mc.get('Back the Draw', 0))
+    live_count = sum(mc.get(s,0) for s in ['Lay U1.5','Back O2.5','Lay O3.5','FHG Lay U0.5'])
+    test_count = mc.get('Back the Draw', 0)
+    c1,c2,c3,c4,c5 = st.columns(5)
+    c1.metric("Live selections",  live_count)
+    c2.metric("Lay U1.5",         mc.get('Lay U1.5', 0))
+    c3.metric("Back O2.5",        mc.get('Back O2.5', 0))
+    c4.metric("Lay O3.5",         mc.get('Lay O3.5', 0))
+    c5.metric("FHG Lay U0.5",     mc.get('FHG Lay U0.5', 0))
+    st.divider()
+    # TEST system row
+    st.markdown(
+        f'''<div style="background:#FEF9E7;border:1px solid #F59E0B;border-radius:8px;
+        padding:10px 16px;display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="background:#F59E0B;color:#fff;font-size:11px;font-weight:600;
+        padding:2px 8px;border-radius:4px;letter-spacing:.5px">TEST</span>
+        <span style="font-size:14px;font-weight:500;color:#92400E">Back the Draw</span>
+        <span style="color:#92400E;font-size:13px">{test_count} selection{"s" if test_count!=1 else ""} today
+        — paper tracking only, not for live betting</span>
+        </div>''', unsafe_allow_html=True)
     st.divider()
 
     if not df_sel.empty:
@@ -126,7 +138,7 @@ if uploaded:
                     "Back O2.5":     "background-color:#D6EFE1;color:#217346;font-weight:bold",
                     "Lay O3.5":      "background-color:#EBE0F0;color:#4A235A;font-weight:bold",
                     "FHG Lay U0.5":  "background-color:#FFF0DC;color:#B35C00;font-weight:bold",
-                    "Back the Draw": "background-color:#D6EAF8;color:#1A5276;font-weight:bold"}.get(v, '')
+                    "Back the Draw": "background-color:#FEF9E7;color:#92400E;font-weight:bold"}.get(v, '')
 
         def sr2(v):
             try:
@@ -137,6 +149,9 @@ if uploaded:
             except:
                 return ''
 
+        # Annotate TEST rows
+        if 'Back the Draw' in show['Market'].values:
+            st.caption("🧪 Amber rows = Back the Draw (TEST mode — paper tracking only)")
         st.dataframe(
             show.style.format(fmt).map(sm, subset=['Market']).map(sr2, subset=['Hist ROI']),
             use_container_width=True, hide_index=True,
@@ -169,5 +184,5 @@ if uploaded:
 | **Back O2.5** | Match xG — Col AI | Irish PL ≥3.75 · Eng Champ ≥4.75 · Polish EK ≥4.25 · Portuguese PL ≥4.50 · Italian SA ≥4.50 · Spanish La Liga ≥3.75 · Dutch Eredivisie ≥4.50 | Back 1.40–2.80 buffer / 1.50–2.50 qualifying — Col CG |
 | **Lay O3.5** | Match xG — Col AI | HIGH xG: Spanish Segunda ≥4.25 · Dutch Eerste ≥4.75 · French L1 ≥4.75 · LOW xG: German BL2 ≤1.75 · Spanish La Liga ≤1.25 · Belgian PL ≤2.00 · Eng Champ ≤1.25 | Lay 1.00–6.00 — Col CR |
 | **FHG Lay U0.5** | FH xGTot — Col AE | Danish SL ≥2.50 · Polish EK ≥2.25 · Portuguese PL ≥2.25 · French L1 ≥2.50 · Dutch Eredivisie ≥2.00 · German BL ≥2.50 · Eng Champ ≥2.50 | Lay 1.00–6.00 — Col DE |
-| **Back the Draw** | Season Supremacy — Col BG | **(1)** 12 eligible leagues **(2)** Supremacy ≥0.25 & ≤0.55 **(3)** Prior season 0-0 rate <6% **(4)** Draw odds ≥3.60 (buffer ≥3.30 shown in amber) · **2025-26 active:** Dutch Eredivisie · EPL · French Ligue 1 · Polish EK · Scottish Prem · Spanish La Liga · Swiss SL | Back ≥3.60 — Col CB |
+| **Back the Draw** 🧪 TEST | Season Supremacy — Col BG | **(1)** 12 eligible leagues **(2)** Supremacy ≥0.25 & ≤0.55 **(3)** Prior season 0-0 rate <6% **(4)** Draw odds ≥3.60 (buffer ≥3.30 shown in amber) · **2026-27 active (6 leagues):** Dutch Eredivisie · Dutch Eerste Divisie · German Bundesliga · German Bundesliga 2 · Spanish La Liga · Swiss Super League | Back ≥3.60 — Col CB |
         """)

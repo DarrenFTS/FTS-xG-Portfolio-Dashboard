@@ -222,7 +222,7 @@ st.divider()
 
 # ── Tab navigation ────────────────────────────────────────────────────────────
 tab_overview, tab_lay15, tab_back25, tab_lay35, tab_fhg, tab_btd = st.tabs([
-    "📊 Portfolio Overview", "Lay U1.5", "Back O2.5", "Lay O3.5", "FHG Lay U0.5", "Back the Draw"
+    "📊 Portfolio Overview", "Lay U1.5 🟢", "Back O2.5 🟢", "Lay O3.5 🟢", "FHG Lay U0.5 🟢", "Back the Draw 🧪"
 ])
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -231,7 +231,7 @@ tab_overview, tab_lay15, tab_back25, tab_lay35, tab_fhg, tab_btd = st.tabs([
 with tab_overview:
     # KPI row
     c1, c2, c3, c4 = st.columns(4)
-    c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "All 4 systems combined")
+    c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "4 live systems + 1 test")
     c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      "Across 5 seasons")
     c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "Back the Draw")
     c4.metric("✅ Systems Profitable",    "5 / 5",               "100% of systems in profit")
