@@ -308,6 +308,16 @@ def signals_to_dataframe(signals: List[BetSignal]) -> pd.DataFrame:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# SYSTEM STATUS — live betting vs paper/test tracking
+# Updated: June 2026
+SYSTEM_STATUS = {
+    "Lay U1.5":      "LIVE",   # Active live betting
+    "Back O2.5":     "LIVE",   # Active live betting
+    "Lay O3.5":      "LIVE",   # Active live betting
+    "FHG Lay U0.5":  "LIVE",   # Active live betting
+    "Back the Draw": "TEST",   # Paper/test mode — 2026-27 season gate in effect
+}
+
 # BACK THE DRAW SYSTEM
 # ══════════════════════════════════════════════════════════════════════════════
 
