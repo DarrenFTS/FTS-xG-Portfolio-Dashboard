@@ -27,6 +27,27 @@ section[data-testid="stSidebar"] span,
 section[data-testid="stSidebar"] p,
 section[data-testid="stSidebar"] div { color: #ffffff !important; }
 
+/* Fix: restore dark text inside input controls so selections are readable */
+[data-testid="stSidebar"] input,
+[data-testid="stSidebar"] select,
+[data-testid="stSidebar"] textarea,
+[data-testid="stSidebar"] [data-baseweb="select"] [data-testid="stMarkdownContainer"],
+[data-testid="stSidebar"] [data-baseweb="input"] input,
+[data-testid="stSidebar"] [data-baseweb="select"] div[class*="ValueContainer"],
+[data-testid="stSidebar"] [data-baseweb="select"] div[class*="singleValue"],
+[data-testid="stSidebar"] [data-baseweb="select"] div[class*="placeholder"],
+[data-testid="stSidebar"] [data-baseweb="select"] span,
+[data-testid="stSidebar"] [data-baseweb="base-input"] input,
+[data-testid="stSidebar"] .stDateInput input,
+[data-testid="stSidebar"] div[data-testid="stDateInput"] input { color: #000000 !important; background-color: #ffffff !important; }
+
+/* Dropdown option list items — dark text on white */
+[data-baseweb="popover"] li,
+[data-baseweb="popover"] ul li,
+[data-baseweb="menu"] li { color: #000000 !important; background-color: #ffffff !important; }
+[data-baseweb="popover"] li:hover,
+[data-baseweb="menu"] li:hover { background-color: #f0f0f0 !important; }
+
 /* Page headings */
 h1, h2, h3, h4,
 .stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
