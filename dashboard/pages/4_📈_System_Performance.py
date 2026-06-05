@@ -191,6 +191,8 @@ with tab_mc:
     def run_mc(sys_name: str, horizon: int, n_sims: int = 5000,
                bank: float = 100.0, ruin_threshold: float = 20.0, seed: int = 42):
         import json as _json, os as _os
+        import numpy as np
+        import pandas as pd
         base = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
         path = _os.path.join(base, "data", "portfolio_master_sheet.json")
         records = _json.load(open(path))
