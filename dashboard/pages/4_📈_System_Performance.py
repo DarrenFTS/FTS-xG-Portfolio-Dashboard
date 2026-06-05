@@ -385,11 +385,13 @@ with tab_mc:
         fig_dist = go.Figure(go.Bar(
             x=[f"{e:+d}" for e in edges], y=pcts,
             marker_color=bar_colors, marker_line_width=0))
-        mean_idx = min(range(len(edges)), key=lambda i: abs(edges[i] - R["pl_mean"]))
-        fig_dist.add_vline(
-            x=mean_idx, line_width=2, line_dash="dash", line_color=_col,
-            annotation_text=f"Mean {R['pl_mean']:+.0f}u",
-            annotation_position="top right", annotation_font_color=_col)
+        if edges:
+            mean_clamped = max(edges[0], min(edges[-1], R["pl_mean"]))
+            mean_idx = min(range(len(edges)), key=lambda i: abs(edges[i] - mean_clamped))
+            fig_dist.add_vline(
+                x=mean_idx, line_width=2, line_dash="dash", line_color=_col,
+                annotation_text=f"Mean {R['pl_mean']:+.0f}u",
+                annotation_position="top right", annotation_font_color=_col)
         fig_dist.update_layout(
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(l=0,r=0,t=10,b=0), height=320,
@@ -415,11 +417,13 @@ with tab_mc:
         fig_dd = go.Figure(go.Bar(
             x=[f"{e}" for e in dd_edges], y=dd_pct,
             marker_color=dd_colors, marker_line_width=0))
-        med_idx = min(range(len(dd_edges)), key=lambda i: abs(dd_edges[i] - R["dd_med"]))
-        fig_dd.add_vline(
-            x=med_idx, line_width=2, line_dash="dash", line_color="#f39c12",
-            annotation_text=f"Median {R['dd_med']:.1f}u",
-            annotation_position="top right", annotation_font_color="#f39c12")
+        if dd_edges:
+            dd_med_clamped = max(dd_edges[0], min(dd_edges[-1], R["dd_med"]))
+            med_idx = min(range(len(dd_edges)), key=lambda i: abs(dd_edges[i] - dd_med_clamped))
+            fig_dd.add_vline(
+                x=med_idx, line_width=2, line_dash="dash", line_color="#f39c12",
+                annotation_text=f"Median {R['dd_med']:.1f}u",
+                annotation_position="top right", annotation_font_color="#f39c12")
         fig_dd.update_layout(
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             margin=dict(l=0,r=0,t=10,b=0), height=280,
