@@ -185,6 +185,7 @@ with tab_perf:
 
 # ── MONTE CARLO TAB ───────────────────────────────────────────────────────────
 with tab_mc:
+    import numpy as np  # ensure np available in tab scope
 
     # ── Simulation engine ─────────────────────────────────────────────────────
     @st.cache_data(show_spinner=False)
