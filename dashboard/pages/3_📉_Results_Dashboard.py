@@ -76,7 +76,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back O2.5": {
-        "total_pl": 87.82, "total_bets": 540, "max_dd": -8.47,
+        "total_pl": 87.91, "total_bets": 546, "max_dd": -8.47,
         "dd_start": "2023-10-28", "dd_end": "2023-11-25",
         "avg_xg": 4.844, "avg_odds": 1.818,
         "color": "#3fb950",
