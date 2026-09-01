@@ -50,7 +50,7 @@ div[class*="stHeading"] h3 { color: #ffffff !important; }
 # ── Embedded historical data ──────────────────────────────────────────────────
 SYSTEM_DATA = {
     "Lay U1.5": {
-        "total_pl": 219.34, "total_bets": 909, "max_dd": -17.59,
+        "total_pl": 218.91, "total_bets": 916, "max_dd": -17.59,
         "dd_start": "2021-07-31", "dd_end": "2021-10-02",
         "avg_xg": 4.184, "avg_odds": 4.63,
         "color": "#58a6ff",
@@ -146,7 +146,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back the Draw": {
-        "total_pl": 164.13, "total_bets": 629, "max_dd": -26.04,
+        "total_pl": 160.11, "total_bets": 641, "max_dd": -30.82,
         "dd_start": "2023-09-03", "dd_end": "2023-09-15",
         "avg_xg": 0.387, "avg_odds": 3.992,
         "color": "#4A90D9",
@@ -181,11 +181,11 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 # ── Cumulative P&L series (from embedded HTML data) ───────────────────────────
 # Key points only — enough to draw accurate curves
 CUM_ENDPOINTS = {
-    "Lay U1.5":    {"start":"2021-07-23","end":"2026-05-30","final":219.34},
+    "Lay U1.5":    {"start":"2021-07-23","end":"2026-05-30","final":218.91},
     "Back O2.5":   {"start":"2021-08-16","end":"2026-05-30","final": 87.11},
     "Lay O3.5":    {"start":"2021-07-27","end":"2026-05-30","final":147.28},
     "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-05-30","final":170.50},
-    "Back the Draw":{"start":"2022-08-07","end":"2026-05-30","final":164.13},
+    "Back the Draw":{"start":"2022-08-07","end":"2026-05-30","final":160.11},
 }
 
 # ── Load full bet-by-bet master sheet for accurate cum + drawdown ─────────────
