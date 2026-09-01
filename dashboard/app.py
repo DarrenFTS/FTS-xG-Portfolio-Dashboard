@@ -56,7 +56,7 @@ with col_title:
         'letter-spacing:-0.5px;line-height:1.1">'
         '\u26bd FTS xG Systems Dashboard</div>'
         '<div style="color:#8b949e;font-size:0.9rem;margin-top:4px">'
-        '<span style="background:#16A34A;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">4 LIVE</span> &nbsp;<span style="background:#D97706;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">1 TEST</span> &nbsp;\u00b7 3,730 bets \u00b7 +21.01% ROI \u00b7 5 systems \u00b7 40 leagues'
+        '<span style="background:#16A34A;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">4 LIVE</span> &nbsp;<span style="background:#D97706;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">1 TEST</span> &nbsp;\u00b7 3,771 bets \u00b7 +20.87% ROI \u00b7 5 systems \u00b7 40 leagues'
         '</div></div>',
         unsafe_allow_html=True
     )
@@ -65,8 +65,8 @@ st.divider()
 
 # ── KPI metrics ───────────────────────────────────────────────────────────────
 c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total Bets",    "3,730",        "2021–2026 | 5 systems")
-c2.metric("Total P/L",     "+783.78 pts",  "+21.01% ROI")
+c1.metric("Total Bets",    "3,771",        "2021–2026 | 5 systems")
+c2.metric("Total P/L",     "+786.90 pts",  "+20.87% ROI")
 c3.metric("Lay U1.5 🟢",   "+23.59% ROI",  "LIVE | 7 leagues")
 c4.metric("FHG Lay U0.5 🟢","+23.12% ROI", "LIVE | 7 leagues")
 c5.metric("Back the Draw 🧪","+26.09% ROI","TEST | 12 leagues")
