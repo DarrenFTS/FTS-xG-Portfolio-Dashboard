@@ -170,7 +170,7 @@ if uploaded:
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 type="primary", use_container_width=True)
         with ci:
-            st.info("Colour-coded Excel with result entry columns and running totals.")
+            st.info("Colour-coded Excel — 'Selections' tab (4 live systems) + 'Test' tab (Back the Draw) — with result entry columns and running totals.")
     else:
         st.warning("⚠️ No qualifying selections found in today's fixtures.")
         lgs = sorted(fixtures['league'].dropna().unique()) if 'league' in fixtures.columns else []
