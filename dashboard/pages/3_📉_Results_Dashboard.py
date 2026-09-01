@@ -50,7 +50,7 @@ div[class*="stHeading"] h3 { color: #ffffff !important; }
 # ── Embedded historical data ──────────────────────────────────────────────────
 SYSTEM_DATA = {
     "Lay U1.5": {
-        "total_pl": 211.10, "total_bets": 895, "max_dd": -17.59,
+        "total_pl": 219.34, "total_bets": 909, "max_dd": -17.59,
         "dd_start": "2021-07-31", "dd_end": "2021-10-02",
         "avg_xg": 4.184, "avg_odds": 4.63,
         "color": "#58a6ff",
@@ -76,7 +76,7 @@ SYSTEM_DATA = {
         ],
     },
     "Back O2.5": {
-        "total_pl": 87.91, "total_bets": 546, "max_dd": -8.47,
+        "total_pl": 85.65, "total_bets": 553, "max_dd": -8.47,
         "dd_start": "2023-10-28", "dd_end": "2023-11-25",
         "avg_xg": 4.844, "avg_odds": 1.818,
         "color": "#3fb950",
@@ -102,7 +102,7 @@ SYSTEM_DATA = {
         ],
     },
     "Lay O3.5": {
-        "total_pl": 153.74, "total_bets": 938, "max_dd": -21.14,
+        "total_pl": 147.28, "total_bets": 946, "max_dd": -21.14,
         "dd_start": "2022-03-14", "dd_end": "2022-05-08",
         "avg_xg": 2.385, "avg_odds": 3.556,
         "color": "#ffa657",
@@ -124,7 +124,7 @@ SYSTEM_DATA = {
         ],
     },
     "FHG Lay U0.5": {
-        "total_pl": 166.90, "total_bets": 722, "max_dd": -12.37,
+        "total_pl": 170.50, "total_bets": 734, "max_dd": -12.37,
         "dd_start": "2024-12-06", "dd_end": "2025-04-06",
         "avg_xg": 2.811, "avg_odds": 4.018,
         "color": "#bc8cff",
@@ -181,10 +181,10 @@ WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
 # ── Cumulative P&L series (from embedded HTML data) ───────────────────────────
 # Key points only — enough to draw accurate curves
 CUM_ENDPOINTS = {
-    "Lay U1.5":    {"start":"2021-07-23","end":"2026-05-30","final":211.10},
+    "Lay U1.5":    {"start":"2021-07-23","end":"2026-05-30","final":219.34},
     "Back O2.5":   {"start":"2021-08-16","end":"2026-05-30","final": 87.11},
-    "Lay O3.5":    {"start":"2021-07-27","end":"2026-05-30","final":153.74},
-    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-05-30","final":166.90},
+    "Lay O3.5":    {"start":"2021-07-27","end":"2026-05-30","final":147.28},
+    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-05-30","final":170.50},
     "Back the Draw":{"start":"2022-08-07","end":"2026-05-30","final":164.13},
 }
 
