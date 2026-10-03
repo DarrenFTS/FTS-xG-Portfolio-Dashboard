@@ -59,7 +59,8 @@ BET_TYPE = {"Lay U1.5":"LAY","Back O2.5":"BACK","Lay O3.5":"LAY","FHG Lay U0.5":
 
 @st.cache_data
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # pages/ -> dashboard/ -> repo root -> data/
+    base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     bets = pd.DataFrame(json.load(open(os.path.join(base, "data", "portfolio_master_sheet.json"))))
     bets["date"] = pd.to_datetime(bets["date"], errors="coerce")
     return bets
