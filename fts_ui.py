@@ -108,16 +108,66 @@ p, li, label, .stMarkdown, [data-testid="stCaptionContainer"] {{ color: {TEXT}; 
   color: {MUTED}; font-weight: 600; }}
 .stTabs [aria-selected="true"] {{ color: {TEXT} !important; background: {SURFACE}; }}
 
-/* inputs */
-[data-baseweb="select"] > div, [data-baseweb="input"] > div, .stNumberInput input, .stDateInput input,
-.stTextInput input {{ background: {SURFACE_2} !important; border-color: {BORDER} !important; color: {TEXT} !important; }}
+/* inputs — explicit dark backgrounds + light text so they read whatever the base theme is */
+[data-baseweb="select"] > div, [data-baseweb="select"] > div > div, [data-baseweb="input"],
+[data-baseweb="input"] > div, [data-baseweb="base-input"], .stNumberInput input, .stDateInput input,
+.stTextInput input, .stNumberInput [data-baseweb="input"] {{
+  background-color: {SURFACE_2} !important; border-color: {BORDER} !important; color: {TEXT} !important; }}
+[data-baseweb="select"] *, [data-baseweb="input"] input, [data-baseweb="base-input"] input {{
+  color: {TEXT} !important; -webkit-text-fill-color: {TEXT} !important; }}
+[data-baseweb="select"] svg {{ fill: {MUTED} !important; }}
+input::placeholder {{ color: {MUTED} !important; -webkit-text-fill-color: {MUTED} !important; }}
 [data-baseweb="tag"] {{ background: rgba(79,140,255,0.22) !important; }}
-[data-baseweb="popover"] li, [data-baseweb="menu"] li {{ background: {SURFACE_2}; color: {TEXT}; }}
+[data-baseweb="popover"] > div, [data-baseweb="popover"] ul, [data-baseweb="menu"] {{ background-color: {SURFACE_2} !important; }}
+[data-baseweb="popover"] li, [data-baseweb="menu"] li, [data-baseweb="popover"] li * {{
+  background-color: {SURFACE_2}; color: {TEXT} !important; }}
+[data-baseweb="popover"] li:hover, [data-baseweb="menu"] li:hover {{ background-color: rgba(79,140,255,0.22) !important; }}
+[data-baseweb="calendar"], [data-baseweb="calendar"] * {{ background-color: {SURFACE_2} !important; color: {TEXT} !important; }}
+.stNumberInput button {{ background-color: {SURFACE_2} !important; color: {TEXT} !important; border-color: {BORDER} !important; }}
+
+/* newer Streamlit dropdowns / date pickers (react-aria) */
+[data-testid="stSelectbox"] [role="group"], [data-testid="stMultiSelect"] [role="group"],
+[data-testid="stMultiSelect"] [data-baseweb="select"] > div, [data-testid="stDateInputField"],
+[data-testid="stDateInput"] [role="group"], [data-testid="stTimeInput"] [role="group"] {{
+  background-color: {SURFACE_2} !important; border-color: {BORDER} !important; color: {TEXT} !important; }}
+[data-testid="stSelectbox"] input, [data-testid="stMultiSelect"] input, [data-testid="stDateInput"] input,
+[data-testid="stSelectbox"] [role="group"] *, [data-testid="stMultiSelect"] [role="group"] *,
+[data-testid="stDateInputField"] * {{
+  color: {TEXT} !important; -webkit-text-fill-color: {TEXT} !important; background-color: transparent !important; }}
+[data-testid="stMultiSelect"] [data-baseweb="tag"], [data-testid="stMultiSelect"] [role="group"] [role="row"],
+[data-testid="stMultiSelect"] [role="group"] [role="gridcell"] {{ background-color: rgba(79,140,255,0.25) !important; }}
+[role="listbox"], [role="listbox"] [role="option"], .react-aria-Popover, .react-aria-ListBox,
+[role="dialog"] [role="grid"], .react-aria-Calendar {{ background-color: {SURFACE_2} !important; color: {TEXT} !important; }}
+[role="listbox"] [role="option"] * {{ color: {TEXT} !important; }}
+[role="listbox"] [role="option"][data-focused], [role="listbox"] [role="option"]:hover,
+[role="listbox"] [role="option"][aria-selected="true"] {{ background-color: rgba(79,140,255,0.25) !important; }}
+
+/* file uploader */
+[data-testid="stFileUploaderDropzone"] {{ background-color: {SURFACE_2} !important; border: 1px dashed {BORDER} !important; }}
+[data-testid="stFileUploaderDropzone"] *, [data-testid="stFileUploaderFile"] * {{ color: {TEXT} !important; }}
+[data-testid="stFileUploaderDropzone"] small, [data-testid="stFileUploaderDropzoneInstructions"] span {{ color: {MUTED} !important; }}
+[data-testid="stFileUploaderDropzone"] button {{ background-color: {SURFACE} !important; border: 1px solid {BORDER} !important; }}
+
+/* metric deltas */
+[data-testid="stMetricDelta"] {{ background-color: transparent !important; }}
+[data-testid="stMetricDelta"] div, [data-testid="stMetricDelta"] p {{ color: {MUTED} !important; }}
+[data-testid="stMetricDelta"] svg {{ fill: {GREEN} !important; color: {GREEN} !important; }}
+
+/* radio / checkbox / toggle labels */
+.stRadio label p, .stCheckbox label p, [data-testid="stWidgetLabel"] p {{ color: {TEXT} !important; }}
 
 /* buttons */
-.stButton > button, .stDownloadButton > button {{ border-radius: 10px; font-weight: 600; border: 1px solid {BORDER}; }}
+.stButton > button, .stDownloadButton > button, [data-testid="stBaseButton-secondary"] {{
+  border-radius: 10px; font-weight: 600; border: 1px solid {BORDER} !important;
+  background-color: {SURFACE_2} !important; color: {TEXT} !important; }}
+.stButton > button *, .stDownloadButton > button * {{ color: inherit !important; }}
+.stButton > button:hover, .stDownloadButton > button:hover {{ border-color: {ACCENT} !important; color: white !important; }}
 .stButton > button[kind="primary"], .stDownloadButton > button[kind="primary"] {{
-  background: linear-gradient(135deg, {ACCENT}, #3B6FE0); border: 0; color: white; }}
+  background: linear-gradient(135deg, {ACCENT}, #3B6FE0) !important; border: 0 !important; color: white !important; }}
+
+/* expander header */
+[data-testid="stExpander"] summary, [data-testid="stExpander"] summary * {{ color: {TEXT} !important; }}
+[data-testid="stExpander"] details {{ background-color: {SURFACE} !important; }}
 
 /* containers */
 [data-testid="stExpander"] {{ background: {SURFACE}; border: 1px solid {BORDER}; border-radius: 12px; }}
@@ -251,17 +301,24 @@ def pl_style(v):
     return ""
 
 
+def _mix(hex_a: str, hex_b: str, t: float) -> str:
+    a, b = hex_a.lstrip("#"), hex_b.lstrip("#")
+    ca = [int(a[i:i + 2], 16) for i in (0, 2, 4)]
+    cb = [int(b[i:i + 2], 16) for i in (0, 2, 4)]
+    return "#" + "".join(f"{round(x + (y - x) * t):02X}" for x, y in zip(ca, cb))
+
+
 def heat_style(v, scale: float = 30):
-    """Green/red background intensity by value (ROI %, P/L, edge)."""
+    """Green/red cell shading by value (ROI %, P/L, edge). Solid colours + white text, readable on any theme."""
     try:
         v = float(v)
     except (TypeError, ValueError):
         return ""
     if pd.isna(v):
-        return f"color:{MUTED};background-color:transparent"
-    a = min(abs(v) / scale, 1) * 0.55 + 0.08
-    col = "34,197,94" if v > 0 else "239,68,68" if v < 0 else "143,163,191"
-    return f"background-color:rgba({col},{a:.2f});color:{TEXT};font-weight:600"
+        return f"color:{MUTED}"
+    t = min(abs(v) / scale, 1) * 0.65 + 0.25
+    base = "#16A34A" if v > 0 else "#DC2626" if v < 0 else "#64748B"
+    return f"background-color:{_mix(SURFACE_2, base, t)};color:#FFFFFF;font-weight:600"
 
 
 def system_style(v):
