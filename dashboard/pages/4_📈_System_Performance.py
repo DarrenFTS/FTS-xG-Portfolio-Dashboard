@@ -7,51 +7,19 @@ import json, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 st.set_page_config(page_title="System Performance", page_icon="📈", layout="wide")
-st.markdown("""<style>
-/* Sidebar background */
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))))
+import fts_ui as ui
+ui.apply_theme()
 
-/* Nuclear option — every element inside sidebar = white */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
-
-/* Page headings */
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
-
-MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
-
-@st.cache_data(ttl=300)
+MKT = dict(ui.SYSTEM_COLORS)
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    bets = pd.DataFrame(json.load(open(os.path.join(base,'data','portfolio_master_sheet.json'))))
-    bets['date'] = pd.to_datetime(bets['date'], errors='coerce')
-    return bets
+    return ui.load_bets()
 
 bets = load_data()
-st.title("📈 System Performance")
+ui.hero("📈", "System Performance", "Per-system results, season & month totals, and Monte Carlo risk")
 
-tab_perf, tab_mc = st.tabs(["📊 Performance", "🎲 Monte Carlo"])
+tab_perf, tab_sm, tab_mc = st.tabs(["📊 Performance", "📅 Season & Month", "🎲 Monte Carlo"])
 with tab_perf:
 
     with st.sidebar:
@@ -92,7 +60,7 @@ with tab_perf:
         fig.add_trace(go.Scatter(x=sb['date'], y=sb['pl'].cumsum(), name='TOTAL', mode='lines',
             line=dict(color=col, width=3),
             hovertemplate='<b>TOTAL</b><br>%{x|%d %b %Y}<br>P/L: %{y:+.2f}<extra></extra>'))
-        fig.update_layout(height=310, template='plotly_white',
+        fig.update_layout(height=310, template='fts',
             margin=dict(l=0,r=0,t=5,b=50),
             legend=dict(orientation='h', y=-0.30, font=dict(size=10)),
             yaxis_title="P/L (pts)")
@@ -104,7 +72,7 @@ with tab_perf:
         fdd = go.Figure(go.Scatter(x=ss2['date'], y=dds.values, fill='tozeroy',
             line=dict(color='#9B1C1C', width=1.5), fillcolor='rgba(155,28,28,0.15)',
             hovertemplate='%{x|%d %b %Y}<br>DD: %{y:.2f}<extra></extra>'))
-        fdd.update_layout(height=310, plot_bgcolor='#0d1117', paper_bgcolor='#0d1117', font=dict(color='#e6edf3'),
+        fdd.update_layout(height=310, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font=dict(color='#e6edf3'),
             margin=dict(l=0,r=0,t=5,b=50), yaxis_title='Drawdown (pts)')
         st.plotly_chart(fdd, use_container_width=True)
 
@@ -142,7 +110,7 @@ with tab_perf:
         flg = go.Figure(go.Bar(x=lg['League'], y=lg['ROI%'].round(2),
             marker_color=[col if v > 0 else '#9B1C1C' for v in lg['ROI%']],
             text=[f"{r:+.2f}%" for r in lg['ROI%']], textposition='outside'))
-        flg.update_layout(height=290, template='plotly_white',
+        flg.update_layout(height=290, template='fts',
             margin=dict(l=0,r=0,t=10,b=80),
             xaxis_tickangle=-35, yaxis_title="ROI %", showlegend=False)
         st.plotly_chart(flg, use_container_width=True)
@@ -179,9 +147,147 @@ with tab_perf:
     lbl = "6G FH xGTot (Col J)" if sc == "FHG Lay U0.5" else "6G Match xG (Col N)"
     fx = px.histogram(sb, x='xg_value', nbins=40, color='system',
                       color_discrete_map=MKT, labels={'xg_value': lbl})
-    fx.update_layout(height=270, template='plotly_white',
+    fx.update_layout(height=270, template='fts',
         margin=dict(l=0,r=0,t=10,b=10), showlegend=False)
     st.plotly_chart(fx, use_container_width=True)
+
+# ── SEASON & MONTH TAB ────────────────────────────────────────────────────────
+with tab_sm:
+    import numpy as _np
+
+    f1, f2, f3 = st.columns([1.3, 2.2, 1])
+    with f1:
+        scope = st.radio("Systems", [f"{sc} (sidebar)", "All 4 live systems", "All 5 systems"],
+                         key="sm_scope", horizontal=False)
+    if scope.startswith("All 4"):
+        scope_sys = ui.LIVE_SYSTEMS
+    elif scope.startswith("All 5"):
+        scope_sys = ui.SYSTEM_ORDER
+    else:
+        scope_sys = [sc]
+    sm = bets[bets["system"].isin(scope_sys)].copy()
+    with f2:
+        lg_opts = sorted(sm["league"].unique())
+        sel_lg = st.multiselect("Leagues (leave empty for all)", lg_opts, key="sm_lg")
+    with f3:
+        metric = st.selectbox("Heatmap shows", ["P/L", "ROI %", "Bets", "SR %"], key="sm_metric")
+    if sel_lg:
+        sm = sm[sm["league"].isin(sel_lg)]
+    if sm.empty:
+        st.info("No bets for that league selection — showing all leagues.")
+        sm = bets[bets["system"].isin(scope_sys)].copy()
+
+    scope_col = ui.SYSTEM_COLORS[sc] if len(scope_sys) == 1 else ui.ACCENT
+    fmt = {"P/L": "{:+.2f}", "ROI %": "{:+.2f}%", "SR %": "{:.1f}%", "Avg Odds": "{:.2f}",
+           "Max DD": "{:.2f}", "Cum P/L": "{:+.2f}", "Bets": "{:.0f}", "Won": "{:.0f}"}
+
+    # ── Season by season ──────────────────────────────────────────────────────
+    ui.section("Season by season", f"{len(sm):,} bets · {', '.join(scope_sys) if len(scope_sys) < 3 else str(len(scope_sys)) + ' systems'}",
+               scope_col)
+    st_tbl = ui.summary(sm, "season").sort_values("season")
+    st_tbl["Cum P/L"] = st_tbl["P/L"].cumsum()
+    st_tbl = st_tbl.rename(columns={"season": "Season"})
+    tot = ui.summary(sm).assign(Season="TOTAL")
+    tot["Cum P/L"] = tot["P/L"]
+    st_show = pd.concat([st_tbl, tot], ignore_index=True)
+
+    cA, cB = st.columns([3, 2])
+    with cA:
+        st.dataframe(st_show.style.format(fmt).map(ui.pl_style, subset=["P/L", "Cum P/L"])
+                     .map(lambda v: ui.heat_style(v, 30), subset=["ROI %"]),
+                     use_container_width=True, hide_index=True)
+    with cB:
+        fs = go.Figure()
+        if len(scope_sys) > 1:
+            g = sm.groupby(["season", "system"])["pl"].sum().reset_index()
+            for s_ in scope_sys:
+                gg = g[g["system"] == s_]
+                fs.add_trace(go.Bar(x=gg["season"], y=gg["pl"], name=s_, marker_color=ui.SYSTEM_COLORS[s_]))
+            fs.update_layout(barmode="relative")
+        else:
+            fs.add_trace(go.Bar(x=st_tbl["Season"], y=st_tbl["P/L"],
+                                marker_color=[ui.GREEN if v >= 0 else ui.RED for v in st_tbl["P/L"]],
+                                text=[f"{v:+.1f}" for v in st_tbl["P/L"]], textposition="outside"))
+        fs.update_layout(height=300, yaxis_title="P/L (pts)", legend=dict(orientation="h", y=-0.2),
+                         showlegend=len(scope_sys) > 1, title=dict(text="P/L by season", font=dict(size=13)))
+        st.plotly_chart(fs, use_container_width=True)
+
+    if len(scope_sys) > 1:
+        with st.expander("Season × system matrix (P/L)", expanded=False):
+            mx = sm.pivot_table(index="system", columns="season", values="pl", aggfunc="sum")
+            mx = mx.reindex([s_ for s_ in ui.SYSTEM_ORDER if s_ in mx.index])
+            mx["Total"] = mx.sum(axis=1)
+            st.dataframe(mx.style.format("{:+.2f}", na_rep="—").map(lambda v: ui.heat_style(v, 60)),
+                         use_container_width=True)
+
+    # ── Month by month ────────────────────────────────────────────────────────
+    ui.section("Month by month", "calendar heatmap, monthly table and running total", scope_col)
+    mt = ui.summary(sm, "month").sort_values("month")
+    mt["Cum P/L"] = mt["P/L"].cumsum()
+    mt["Year"] = mt["month"].dt.year
+    mt["Mon"] = mt["month"].dt.month
+
+    n_m = len(mt)
+    pos_m = int((mt["P/L"] > 0).sum())
+    best = mt.loc[mt["P/L"].idxmax()]
+    worst = mt.loc[mt["P/L"].idxmin()]
+    streak = cur = 0
+    for v in mt["P/L"]:
+        cur = cur + 1 if v < 0 else 0
+        streak = max(streak, cur)
+    k1, k2, k3, k4, k5 = st.columns(5)
+    k1.markdown(ui.card("Months traded", f"{n_m}", f"{mt['month'].min().strftime('%b %Y')} – {mt['month'].max().strftime('%b %Y')}"), unsafe_allow_html=True)
+    k2.markdown(ui.card("Profitable months", f"{pos_m}/{n_m}", f"{pos_m / n_m:.0%} of months in profit", ui.GREEN),
+                unsafe_allow_html=True)
+    k3.markdown(ui.card("Best month", f"{best['P/L']:+.2f}", best["month"].strftime("%B %Y"), ui.GREEN), unsafe_allow_html=True)
+    k4.markdown(ui.card("Worst month", f"{worst['P/L']:+.2f}", worst["month"].strftime("%B %Y"), ui.RED), unsafe_allow_html=True)
+    k5.markdown(ui.card("Longest losing run", f"{streak}", "consecutive losing months", ui.AMBER), unsafe_allow_html=True)
+
+    hm_val = {"P/L": "P/L", "ROI %": "ROI %", "Bets": "Bets", "SR %": "SR %"}[metric]
+    grid = mt.pivot_table(index="Year", columns="Mon", values=hm_val, aggfunc="first").reindex(columns=range(1, 13))
+    grid.columns = ui.MONTHS
+    yr = ui.summary(sm.assign(Year=sm["date"].dt.year), "Year").set_index("Year")
+    grid["Year"] = yr[hm_val].reindex(grid.index)
+    z = grid.values.astype(float)
+    if metric in ("P/L", "ROI %"):
+        lim = _np.nanmax(_np.abs(z[:, :12])) if _np.isfinite(z[:, :12]).any() else 1
+        cs, zmin, zmax = [[0, ui.RED], [0.5, ui.SURFACE_2], [1, ui.GREEN]], -lim, lim
+    else:
+        cs, zmin, zmax = [[0, ui.SURFACE_2], [1, ui.ACCENT]], None, None
+    txt_fmt = {"P/L": "{:+.1f}", "ROI %": "{:+.0f}%", "Bets": "{:.0f}", "SR %": "{:.0f}%"}[metric]
+    text = [["" if _np.isnan(v) else txt_fmt.format(v) for v in row] for row in z]
+    ylab = [f"Y{y}" for y in grid.index]  # non-numeric labels keep Plotly on a category axis
+    fh = go.Figure()
+    fh.add_trace(go.Heatmap(z=z[:, :12], x=ui.MONTHS, y=ylab, text=[r[:12] for r in text],
+                            texttemplate="%{text}", textfont=dict(color=ui.TEXT), colorscale=cs, zmin=zmin, zmax=zmax,
+                            showscale=False, xgap=3, ygap=3, hovertemplate="%{x}: %{text}<extra></extra>"))
+    fh.update_layout(height=80 + 46 * len(grid), margin=dict(l=10, r=10, t=40, b=10),
+                     yaxis=dict(autorange="reversed", showgrid=False, type="category",
+                                tickvals=ylab, ticktext=[f"<b>{y}</b>  {r[12]}" for y, r in zip(grid.index, text)]),
+                     xaxis=dict(side="top", showgrid=False, type="category"))
+    st.plotly_chart(fh, use_container_width=True)
+
+    fm = go.Figure()
+    fm.add_trace(go.Bar(x=mt["month"].dt.to_timestamp(), y=mt["P/L"], name="Monthly P/L",
+                        marker_color=[ui.GREEN if v >= 0 else ui.RED for v in mt["P/L"]]))
+    fm.add_trace(go.Scatter(x=mt["month"].dt.to_timestamp(), y=mt["Cum P/L"], name="Running total",
+                            yaxis="y2", line=dict(color=scope_col, width=2.5)))
+    fm.update_layout(height=320, yaxis=dict(title="Monthly P/L"),
+                     yaxis2=dict(title="Running total", overlaying="y", side="right", showgrid=False),
+                     legend=dict(orientation="h", y=1.12), hovermode="x unified")
+    st.plotly_chart(fm, use_container_width=True)
+
+    mt_show = mt.sort_values("month", ascending=False).copy()
+    mt_show["Month"] = mt_show["month"].dt.strftime("%b %Y")
+    mt_show = mt_show[["Month", "Bets", "Won", "SR %", "Avg Odds", "P/L", "ROI %", "Max DD", "Cum P/L"]]
+    st.dataframe(mt_show.style.format(fmt).map(ui.pl_style, subset=["P/L", "Cum P/L"])
+                 .map(lambda v: ui.heat_style(v, 40), subset=["ROI %"]),
+                 use_container_width=True, hide_index=True, height=420)
+    d1, d2 = st.columns(2)
+    d1.download_button("⬇ Season table (CSV)", st_show.to_csv(index=False).encode(),
+                       f"season_totals_{'_'.join(scope_sys)}.csv".replace(" ", ""), use_container_width=True)
+    d2.download_button("⬇ Month table (CSV)", mt_show.to_csv(index=False).encode(),
+                       f"month_totals_{'_'.join(scope_sys)}.csv".replace(" ", ""), use_container_width=True)
 
 # ── MONTE CARLO TAB ───────────────────────────────────────────────────────────
 with tab_mc:
@@ -190,7 +296,8 @@ with tab_mc:
     # ── Simulation engine ─────────────────────────────────────────────────────
     @st.cache_data(show_spinner=False)
     def run_mc(sys_name: str, horizon: int, n_sims: int = 5000,
-               bank: float = 100.0, ruin_threshold: float = 20.0, seed: int = 42):
+               bank: float = 100.0, ruin_threshold: float = 20.0, seed: int = 42,
+               data_version: float = 0.0):
         import json as _json, os as _os
         import numpy as np
         import pandas as pd
@@ -301,10 +408,11 @@ with tab_mc:
         st.warning("🧪 Back the Draw is in TEST mode — simulations are for research purposes only.")
 
     # ── Run / retrieve ────────────────────────────────────────────────────────
-    _key = f"mc_{mc_sys}_{mc_hor}"
+    _DV = _os.path.getmtime(ui.DATA_PATH)
+    _key = f"mc_{mc_sys}_{mc_hor}_{_DV}"
     if run_btn or _key not in st.session_state:
         with st.spinner(f"Running 5,000 simulations for {mc_sys} over {mc_hor:,} bets…"):
-            st.session_state[_key] = run_mc(mc_sys, mc_hor)
+            st.session_state[_key] = run_mc(mc_sys, mc_hor, data_version=_DV)
 
     R = st.session_state.get(_key)
     if R is None:
@@ -500,7 +608,7 @@ with tab_mc:
         sys_list = list(MKT.keys())
         status_map = {"Back the Draw": "🧪 TEST"}
         for i, sn in enumerate(sys_list):
-            r2 = run_mc(sn, mc_hor)
+            r2 = run_mc(sn, mc_hor, data_version=_DV)
             prog.progress((i + 1) / len(sys_list))
             if r2:
                 cmp_rows.append({

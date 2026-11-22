@@ -6,73 +6,15 @@ import json, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 st.set_page_config(page_title="Portfolio Overview", page_icon="📊", layout="wide")
-st.markdown("""<style>
-/* Sidebar background */
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))))
+import fts_ui as ui
+ui.apply_theme()
 
-/* Nuclear option — every element inside sidebar = white */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
-
-/* Fix: selectbox and date input — dark text on white background */
-/* Target the selectbox control box itself */
-[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div > div,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div > div > div,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] > div > div > div > div *,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] div[class*="ValueContainer"] *,
-[data-testid="stSidebar"] [data-testid="stSelectbox"] div[class*="singleValue"],
-[data-testid="stSidebar"] [data-testid="stSelectbox"] div[class*="placeholder"],
-[data-testid="stSidebar"] div[data-baseweb="select"] div,
-[data-testid="stSidebar"] div[data-baseweb="select"] div *,
-[data-testid="stSidebar"] div[data-baseweb="select"] span { color: #1a1a1a !important; background-color: #ffffff !important; }
-
-/* Date input */
-[data-testid="stSidebar"] input,
-[data-testid="stSidebar"] .stDateInput input,
-[data-testid="stSidebar"] div[data-testid="stDateInput"] input { color: #1a1a1a !important; background-color: #ffffff !important; }
-
-/* Dropdown option list rendered outside sidebar (in portal) */
-[data-baseweb="popover"] [role="option"],
-[data-baseweb="popover"] [role="option"] *,
-[data-baseweb="popover"] li,
-[data-baseweb="menu"] [role="option"],
-[data-baseweb="menu"] li { color: #1a1a1a !important; background-color: #ffffff !important; }
-[data-baseweb="popover"] [role="option"]:hover,
-[data-baseweb="menu"] [role="option"]:hover { background-color: #f0f4f8 !important; }
-
-/* Page headings */
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
-
-MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
-
-@st.cache_data(ttl=300)
+MKT = dict(ui.SYSTEM_COLORS)
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    bets = pd.DataFrame(json.load(open(os.path.join(base,'data','portfolio_master_sheet.json'))))
-    bets['date'] = pd.to_datetime(bets['date'], errors='coerce')
-    return bets
+    # shared loader — refreshes automatically when the data file is updated
+    return ui.load_bets().drop(columns=['month'])
 
 bets = load_data()
 st.title("📊 Portfolio Overview")
@@ -114,9 +56,9 @@ for mkt, col in MKT.items():
             line=dict(color=col, width=2), mode='lines',
             hovertemplate=f'<b>{mkt}</b><br>%{{x|%d %b %Y}}<br>P/L: %{{y:+.2f}}<extra></extra>'))
 fig.add_trace(go.Scatter(x=cd['date'], y=cd['cumpl'], name='Combined',
-    line=dict(color='#0D2B55', width=3, dash='dot'), mode='lines',
+    line=dict(color='#E6EDF7', width=3, dash='dot'), mode='lines',
     hovertemplate='<b>Combined</b><br>%{x|%d %b %Y}<br>P/L: %{y:+.2f}<extra></extra>'))
-fig.update_layout(height=360, template='plotly_white',
+fig.update_layout(height=360, template='fts',
     legend=dict(orientation='h', y=-0.18),
     margin=dict(l=0,r=0,t=10,b=50), yaxis_title="P/L (pts)")
 st.plotly_chart(fig, use_container_width=True)
@@ -136,9 +78,9 @@ for mkt, col in MKT.items():
 c2_all = cd.sort_values('date')['pl'].cumsum()
 dd_fig.add_trace(go.Scatter(
     x=cd.sort_values('date')['date'], y=(c2_all - c2_all.cummax()).values,
-    name='Combined', mode='lines', line=dict(color='#0D2B55', width=2.5, dash='dot'),
+    name='Combined', mode='lines', line=dict(color='#E6EDF7', width=2.5, dash='dot'),
     hovertemplate='<b>Combined</b><br>%{x|%d %b %Y}<br>DD: %{y:+.2f}<extra></extra>'))
-dd_fig.update_layout(height=280, template='plotly_white',
+dd_fig.update_layout(height=280, template='fts',
     legend=dict(orientation='h', y=-0.22), margin=dict(l=0,r=0,t=10,b=60),
     yaxis_title="Drawdown (pts)")
 dd_fig.add_hline(y=0, line_dash='dash', line_color='grey', opacity=0.4)
@@ -158,7 +100,7 @@ with cr:
     fig2 = go.Figure(go.Bar(x=sg['System'], y=sg['ROI%'].round(2),
         marker_color=[MKT.get(m,'#888') for m in sg['System']],
         text=[f"{r:+.2f}%" for r in sg['ROI%']], textposition='outside'))
-    fig2.update_layout(height=270, template='plotly_white',
+    fig2.update_layout(height=270, template='fts',
         margin=dict(l=0,r=0,t=10,b=10), yaxis_title="ROI %", showlegend=False)
     st.plotly_chart(fig2, use_container_width=True)
 
@@ -174,7 +116,7 @@ lg = lg[['System','League','Bets','PL','ROI%','SR%']].sort_values(['System','ROI
 def croi(v):
     if v >= 30: return 'background-color:#D6EFE1;color:#155C2E'
     if v >= 15: return 'background-color:#DCE9F7;color:#0B5E6B'
-    if v >  0:  return 'background-color:#FEF3C7'
+    if v >  0:  return 'background-color:#FEF3C7;color:#92580B'
     return 'background-color:#FDE8E8;color:#9B1C1C'
 
 st.dataframe(
@@ -200,7 +142,7 @@ for mkt, col in MKT.items():
     if len(sub):
         fig3.add_trace(go.Bar(x=sub['sl'], y=sub['ROI%'].round(2), name=mkt, marker_color=col,
             hovertemplate=f'<b>{mkt}</b><br>%{{x}}<br>ROI: %{{y:+.2f}}%<extra></extra>'))
-fig3.update_layout(height=300, template='plotly_white', barmode='group',
+fig3.update_layout(height=300, template='fts', barmode='group',
     legend=dict(orientation='h', y=-0.22), margin=dict(l=0,r=0,t=10,b=60),
     yaxis_title="ROI %", xaxis_title="Season")
 st.plotly_chart(fig3, use_container_width=True)

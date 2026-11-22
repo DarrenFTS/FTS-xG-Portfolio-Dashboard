@@ -1,5 +1,27 @@
 # FTS xG Systems Dashboard
 
+Streamlit dashboard for the FTS xG betting portfolio — 4 live systems + Back the Draw (test).
+Every page reads `data/portfolio_master_sheet.json`; no figures are typed into the code.
+
+## Monthly update (2 minutes)
+1. Open **🔄 Update Database** in the dashboard and upload the latest *FTS Advanced Results – xG* Excel.
+2. Press **Rebuild all systems**, check the comparison table.
+3. **Save to GitHub** (one click once a token is in the app's Secrets — guide on that page),
+   or download `portfolio_master_sheet.json` + `build_info.json` and upload them to `data/` on GitHub.
+
+Offline alternative: `python scripts/update_dashboard.py "FTS Advanced Results - xG - 21-26.xlsx"`
+
+System rules live in one place: `systems/portfolio_builder.py` (`RULES`, `BTD_LEAGUES`).
+Look and colours live in one place: `fts_ui.py` + `.streamlit/config.toml`.
+
+## Pages
+Home · Daily Selector · Portfolio · Results Dashboard · System Performance (incl. Season & Month and Monte Carlo) ·
+Analytics · Odds Edge Analysis (overview, season by season, month by month) · Price Leak Calculator · Update Database
+
+---
+
+## Original notes (historical)
+
 A Streamlit dashboard for the FTS xG betting portfolio —
 4 systems, 34 system-league combinations, 5,386 historical bets, +17.7% blended ROI.
 

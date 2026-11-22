@@ -9,40 +9,12 @@ from systems.all_systems import load_fixture_file, scan_all_systems, signals_to_
 from models.enhanced_daily_selector import export_to_excel
 
 st.set_page_config(page_title="Daily Selector", page_icon="🎯", layout="wide")
-st.markdown("""<style>
-/* Sidebar background */
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))))
+import fts_ui as ui
+ui.apply_theme()
 
-/* Nuclear option — every element inside sidebar = white */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
-
-/* Page headings */
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
-
-MKT_C = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
-
+MKT_C = dict(ui.SYSTEM_COLORS)
 st.title("🎯 Daily Bet Selector")
 st.markdown("Upload today's **FTS Advanced PreMatch Excel** file to generate qualifying selections.")
 

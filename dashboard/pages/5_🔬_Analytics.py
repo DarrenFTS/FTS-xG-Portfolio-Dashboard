@@ -7,46 +7,15 @@ import json, os, sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 st.set_page_config(page_title="Analytics", page_icon="🔬", layout="wide")
-st.markdown("""<style>
-/* Sidebar background */
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))))
+import fts_ui as ui
+ui.apply_theme()
 
-/* Nuclear option — every element inside sidebar = white */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
-
-/* Page headings */
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
-
-MKT = {"Lay U1.5":"#0B5E6B","Back O2.5":"#217346","Lay O3.5":"#4A235A","FHG Lay U0.5":"#B35C00","Back the Draw":"#1A5276"}
-
-@st.cache_data(ttl=300)
+MKT = dict(ui.SYSTEM_COLORS)
 def load_data():
-    base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    bets = pd.DataFrame(json.load(open(os.path.join(base,'data','portfolio_master_sheet.json'))))
-    bets['date'] = pd.to_datetime(bets['date'], errors='coerce')
-    return bets
+    # shared loader — refreshes automatically when the data file is updated
+    return ui.load_bets().drop(columns=['month'])
 
 bets = load_data()
 st.title("🔬 Analytics")
@@ -72,7 +41,7 @@ with c1:
     fo = px.bar(og, x='ob', y='ROI%', color='system', barmode='group',
                 category_orders={'ob':OO}, color_discrete_map=MKT,
                 labels={'ob':'Odds Band','ROI%':'ROI %'})
-    fo.update_layout(height=330, template='plotly_white',
+    fo.update_layout(height=330, template='fts',
         margin=dict(l=0,r=0,t=10,b=10), legend=dict(orientation='h', y=-0.25))
     st.plotly_chart(fo, use_container_width=True)
 with c2:
@@ -93,7 +62,7 @@ mn['clr']  = mn['PL'].apply(lambda x: '#217346' if x > 0 else '#9B1C1C')
 fm = go.Figure(go.Bar(x=mn['ym'], y=mn['PL'].round(2), marker_color=mn['clr'],
     text=[f"{p:+.2f}" for p in mn['PL']], textposition='outside',
     hovertemplate='%{x}<br>P/L: %{y:+.2f}<extra></extra>'))
-fm.update_layout(height=300, template='plotly_white',
+fm.update_layout(height=300, template='fts',
     margin=dict(l=0,r=0,t=10,b=60), xaxis_tickangle=-45, yaxis_title="P/L (pts)")
 st.plotly_chart(fm, use_container_width=True)
 
@@ -105,7 +74,7 @@ c3, c4 = st.columns(2)
 with c3:
     fh = px.histogram(b2, x='pl', color='system', nbins=50,
                       color_discrete_map=MKT, labels={'pl':'P/L per bet'})
-    fh.update_layout(height=280, template='plotly_white',
+    fh.update_layout(height=280, template='fts',
         margin=dict(l=0,r=0,t=10,b=10), legend=dict(orientation='h', y=-0.25))
     st.plotly_chart(fh, use_container_width=True)
 with c4:
@@ -114,7 +83,7 @@ with c4:
     fsr = go.Figure(go.Bar(x=wr['system'], y=wr['SR%'].round(2),
         marker_color=[MKT.get(s,'#888') for s in wr['system']],
         text=[f"{r:.2f}%" for r in wr['SR%']], textposition='outside'))
-    fsr.update_layout(height=280, template='plotly_white',
+    fsr.update_layout(height=280, template='fts',
         margin=dict(l=0,r=0,t=10,b=10),
         yaxis_title="Strike Rate %", showlegend=False, title="Strike Rate by System")
     st.plotly_chart(fsr, use_container_width=True)
@@ -132,7 +101,7 @@ fr = go.Figure(go.Scatter(x=rs_d['date'], y=rs_d['rr'].round(2), mode='lines',
     line=dict(color=MKT[rs], width=2),
     hovertemplate='%{x|%d %b %Y}<br>ROI: %{y:+.2f}%<extra></extra>'))
 fr.add_hline(y=0, line_dash='dash', line_color='grey', opacity=0.5)
-fr.update_layout(height=280, template='plotly_white',
+fr.update_layout(height=280, template='fts',
     margin=dict(l=0,r=0,t=10,b=10), yaxis_title="Rolling ROI per bet (%)")
 st.plotly_chart(fr, use_container_width=True)
 
@@ -161,7 +130,7 @@ with col_dd2:
             x=sub['date'], y=dds.values, name=sys, mode='lines',
             line=dict(color=MKT.get(sys,'#888'), width=1.5),
             hovertemplate=f'<b>{sys}</b><br>%{{x|%d %b %Y}}<br>DD: %{{y:+.2f}}<extra></extra>'))
-    fig_dd.update_layout(height=300, plot_bgcolor='#0d1117', paper_bgcolor='#0d1117',
+    fig_dd.update_layout(height=300, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='#e6edf3'), margin=dict(l=0,r=0,t=10,b=50),
         legend=dict(orientation='h', y=-0.25), yaxis_title="Drawdown (pts)")
     fig_dd.add_hline(y=0, line_dash='dash', line_color='grey', opacity=0.4)

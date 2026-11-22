@@ -1,145 +1,93 @@
-"""FTS xG Portfolio Dashboard — Home"""
+"""FTS xG Portfolio Dashboard — Home (all figures calculated from data/portfolio_master_sheet.json)"""
+import os as _os
+import sys as _sys
+
+import plotly.graph_objects as go
 import streamlit as st
 
-st.set_page_config(page_title="FTS xG Systems", page_icon="⚽", layout="wide",
-                   initial_sidebar_state="expanded")
+st.set_page_config(page_title="FTS xG Systems", page_icon="⚽", layout="wide", initial_sidebar_state="expanded")
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+import fts_ui as ui  # noqa: E402
 
-st.markdown("""<style>
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
+ui.apply_theme()
+bets = ui.load_bets()
+live = bets[bets["system"].isin(ui.LIVE_SYSTEMS)]
+n_lg = bets.groupby("system")["league"].nunique()
+last = bets["date"].max()
 
-# Sidebar branding — sits above the nav links, replaces the grey "app" label visually
-st.sidebar.markdown(
-    '<div style="padding:8px 0 16px 0;border-bottom:1px solid rgba(255,255,255,0.15);'
-    'margin-bottom:8px">'
-    '<span style="color:#ffffff;font-size:1rem;font-weight:700">'
-    '\u26bd FTS xG Dashboard</span></div>',
-    unsafe_allow_html=True
-)
+ui.hero("⚽", "FTS xG Systems Dashboard",
+        f"{ui.pill('4 LIVE', ui.GREEN)} {ui.pill('1 TEST', ui.AMBER)} &nbsp;·&nbsp; "
+        f"{len(bets):,} bets · {bets['pl'].sum() / len(bets) * 100:+.2f}% ROI · results to {last:%d %b %Y}")
 
-# ── Header with logo + emoji in title ────────────────────────────────────────
-col_logo, col_title = st.columns([1, 8])
-with col_logo:
-    st.markdown(
-        '<div style="background:linear-gradient(135deg,#1f6feb,#0D2B55);'
-        'border-radius:16px;padding:14px;text-align:center;'
-        'font-size:2.4rem;line-height:1;margin-top:4px">\u26bd</div>',
-        unsafe_allow_html=True
-    )
-with col_title:
-    st.markdown(
-        '<div style="padding-left:8px">'
-        '<div style="color:#ffffff;font-size:2rem;font-weight:800;'
-        'letter-spacing:-0.5px;line-height:1.1">'
-        '\u26bd FTS xG Systems Dashboard</div>'
-        '<div style="color:#8b949e;font-size:0.9rem;margin-top:4px">'
-        '<span style="background:#16A34A;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">4 LIVE</span> &nbsp;<span style="background:#D97706;color:#fff;font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px">1 TEST</span> &nbsp;\u00b7 3,906 bets \u00b7 +20.13% ROI \u00b7 5 systems \u00b7 40 leagues'
-        '</div></div>',
-        unsafe_allow_html=True
-    )
+# ── Headline KPIs ─────────────────────────────────────────────────────────────
+this_m = bets["month"].max()
+mb = live[live["month"] == this_m]
+s26 = live[live["season"] == bets["season"].max()]
+k = st.columns(5)
+k[0].markdown(ui.card("Live P/L", f"{live['pl'].sum():+.2f} pts", f"{len(live):,} bets · {live['pl'].sum() / len(live) * 100:+.2f}% ROI",
+                      ui.GREEN), unsafe_allow_html=True)
+k[1].markdown(ui.card("All systems P/L", f"{bets['pl'].sum():+.2f} pts", "incl. Back the Draw (paper)", ui.ACCENT),
+              unsafe_allow_html=True)
+k[2].markdown(ui.card(f"Season {bets['season'].max()}", f"{s26['pl'].sum():+.2f} pts", f"{len(s26)} live bets",
+                      ui.GREEN if s26["pl"].sum() >= 0 else ui.RED), unsafe_allow_html=True)
+k[3].markdown(ui.card(f"{this_m.strftime('%B %Y')}", f"{mb['pl'].sum():+.2f} pts", f"{len(mb)} live bets",
+                      ui.GREEN if mb["pl"].sum() >= 0 else ui.RED), unsafe_allow_html=True)
+k[4].markdown(ui.card("Strike rate (live)", f"{live['won'].mean() * 100:.1f}%", f"{bets['league'].nunique()} leagues covered",
+                      ui.MUTED), unsafe_allow_html=True)
 
-st.divider()
-
-# ── KPI metrics ───────────────────────────────────────────────────────────────
-c1, c2, c3, c4, c5 = st.columns(5)
-c1.metric("Total Bets",    "3,906",        "2021–2026 | 5 systems")
-c2.metric("Total P/L",     "+786.10 pts",  "+20.13% ROI")
-c3.metric("Lay U1.5 🟢",   "+23.92% ROI",  "LIVE | 7 leagues")
-c4.metric("FHG Lay U0.5 🟢","+21.82% ROI", "LIVE | 7 leagues")
-c5.metric("Back the Draw 🧪","+24.53% ROI","TEST | 12 leagues")
-
-st.divider()
-
-# ── System status summary ─────────────────────────────────────────────────────
-st.markdown("""
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
-  <div style="background:#161b22;border:1px solid #30363d;border-left:4px solid #16A34A;border-radius:8px;padding:10px 16px;min-width:180px">
-    <div style="font-size:11px;font-weight:600;color:#16A34A;letter-spacing:.5px">LIVE</div>
-    <div style="color:#fff;font-weight:600;font-size:14px;margin:2px 0">Lay U1.5</div>
-    <div style="color:#8b949e;font-size:12px">945 bets · +23.92% ROI</div>
-  </div>
-  <div style="background:#161b22;border:1px solid #30363d;border-left:4px solid #16A34A;border-radius:8px;padding:10px 16px;min-width:180px">
-    <div style="font-size:11px;font-weight:600;color:#16A34A;letter-spacing:.5px">LIVE</div>
-    <div style="color:#fff;font-weight:600;font-size:14px;margin:2px 0">Back O2.5</div>
-    <div style="color:#8b949e;font-size:12px">569 bets · +15.20% ROI</div>
-  </div>
-  <div style="background:#161b22;border:1px solid #30363d;border-left:4px solid #16A34A;border-radius:8px;padding:10px 16px;min-width:180px">
-    <div style="font-size:11px;font-weight:600;color:#16A34A;letter-spacing:.5px">LIVE</div>
-    <div style="color:#fff;font-weight:600;font-size:14px;margin:2px 0">Lay O3.5</div>
-    <div style="color:#8b949e;font-size:12px">968 bets · +14.97% ROI</div>
-  </div>
-  <div style="background:#161b22;border:1px solid #30363d;border-left:4px solid #16A34A;border-radius:8px;padding:10px 16px;min-width:180px">
-    <div style="font-size:11px;font-weight:600;color:#16A34A;letter-spacing:.5px">LIVE</div>
-    <div style="color:#fff;font-weight:600;font-size:14px;margin:2px 0">FHG Lay U0.5</div>
-    <div style="color:#8b949e;font-size:12px">760 bets · +21.82% ROI</div>
-  </div>
-  <div style="background:#161b22;border:1px solid #30363d;border-left:4px solid #D97706;border-radius:8px;padding:10px 16px;min-width:180px">
-    <div style="font-size:11px;font-weight:600;color:#D97706;letter-spacing:.5px">TEST</div>
-    <div style="color:#fff;font-weight:600;font-size:14px;margin:2px 0">Back the Draw</div>
-    <div style="color:#8b949e;font-size:12px">664 bets · +24.53% ROI · paper only</div>
-  </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.divider()
-
-# ── Navigation cards ──────────────────────────────────────────────────────────
-st.markdown("<h3>Navigate</h3>", unsafe_allow_html=True)
-
-nav_items = [
-    ("\U0001f3af", "Daily Selector",     "#1f6feb", "Upload today's PreMatch file to generate qualifying selections"),
-    ("\U0001f4ca", "Portfolio",          "#0B5E6B", "Full performance breakdown with season & league charts"),
-    ("\U0001f4c9", "Results Dashboard",  "#4A235A", "Cumulative P&L curves, drawdown analysis, competition breakdown"),
-    ("\U0001f4c8", "System Performance", "#155C2E", "Detailed per-system and per-league edge analysis"),
-    ("\U0001f52c", "Analytics",          "#92580B", "Distributions, rolling ROI, and deep-dive analytics"),
-    ("\U0001f504", "Update Database",    "#333333", "Upload a new results file to refresh all data"),
-]
-
-cols = st.columns(3)
-for i, (icon, title, color, desc) in enumerate(nav_items):
-    with cols[i % 3]:
+# ── System cards with sparkline ──────────────────────────────────────────────
+ui.section("Systems", "cumulative P/L since 2021 · click a page in the sidebar for detail")
+cols = st.columns(5)
+for col, s in zip(cols, ui.SYSTEM_ORDER):
+    sb = bets[bets["system"] == s]
+    clr = ui.SYSTEM_COLORS[s]
+    cum = sb["pl"].cumsum()
+    dd = float((cum - cum.cummax()).min())
+    with col:
         st.markdown(
-            f'<div style="background:#161b22;border:1px solid #30363d;'
-            f'border-top:3px solid {color};border-radius:10px;'
-            f'padding:18px;margin-bottom:16px;height:110px">'
-            f'<div style="font-size:1.4rem;margin-bottom:6px">{icon}'
-            f'<span style="color:#ffffff;font-weight:700;font-size:1rem;'
-            f'vertical-align:middle;margin-left:6px">{title}</span></div>'
-            f'<div style="color:#8b949e;font-size:0.78rem;line-height:1.4">{desc}</div>'
-            f'</div>',
-            unsafe_allow_html=True
-        )
+            f'<div class="fts-card" style="border-top:3px solid {clr};padding-bottom:6px">'
+            f'<div style="display:flex;justify-content:space-between;align-items:center">'
+            f'<div style="font-weight:700;font-size:1rem">{s}</div>{ui.status_pill(s)}</div>'
+            f'<div class="val" style="color:{clr}">{sb["pl"].sum():+.2f}</div>'
+            f'<div class="sub">{len(sb):,} bets · {sb["pl"].sum() / len(sb) * 100:+.2f}% ROI · '
+            f'{sb["won"].mean() * 100:.1f}% SR</div>'
+            f'<div class="sub">{n_lg.get(s, 0)} leagues · max DD {dd:.1f}</div></div>', unsafe_allow_html=True)
+        f = go.Figure(go.Scatter(x=sb["date"], y=cum, mode="lines", line=dict(color=clr, width=2),
+                                 fill="tozeroy", fillcolor=ui.hex_rgba(clr, 0.12),
+                                 hovertemplate="%{x|%d %b %Y}<br>%{y:+.2f}<extra></extra>"))
+        f.update_layout(height=110, margin=dict(l=0, r=0, t=0, b=0), xaxis=dict(visible=False),
+                        yaxis=dict(visible=False), showlegend=False)
+        st.plotly_chart(f, use_container_width=True, config={"displayModeBar": False})
 
-st.markdown(
-    '<div style="background:#161b22;border:1px solid #30363d;border-radius:8px;'
-    'padding:14px 18px;margin-top:8px;color:#8b949e;font-size:0.8rem">'
-    '<span style="color:#58a6ff;font-weight:600">\u2139\ufe0f How to use:</span> '
-    'Select a page from the sidebar to navigate. Start with '
-    '<strong style="color:#ffffff">Daily Selector</strong> to generate today\'s bets, '
-    'or <strong style="color:#ffffff">Results Dashboard</strong> to review historical performance.'
-    '</div>',
-    unsafe_allow_html=True
-)
+# ── Portfolio curve ───────────────────────────────────────────────────────────
+ui.section("Portfolio growth", "live systems combined vs each system")
+fig = go.Figure()
+for s in ui.SYSTEM_ORDER:
+    sb = bets[bets["system"] == s]
+    fig.add_trace(go.Scatter(x=sb["date"], y=sb["pl"].cumsum(), name=s, mode="lines",
+                             line=dict(color=ui.SYSTEM_COLORS[s], width=1.6),
+                             visible=True if s in ui.LIVE_SYSTEMS else "legendonly"))
+fig.add_trace(go.Scatter(x=live["date"], y=live["pl"].cumsum(), name="Live combined", mode="lines",
+                         line=dict(color=ui.TEXT, width=3)))
+fig.update_layout(height=360, yaxis_title="P/L (pts)", hovermode="x unified", legend=dict(orientation="h", y=-0.15))
+st.plotly_chart(fig, use_container_width=True)
+
+# ── Navigation ────────────────────────────────────────────────────────────────
+ui.section("Pages")
+nav = [
+    ("🎯", "Daily Selector", "Upload today's PreMatch file to generate qualifying selections"),
+    ("📊", "Portfolio", "Performance breakdown with season and league charts and filters"),
+    ("📉", "Results Dashboard", "Cumulative P/L curves, drawdowns and competition breakdown per system"),
+    ("📈", "System Performance", "Per-system detail, season & month totals and Monte Carlo risk"),
+    ("🔬", "Analytics", "Odds bands, distributions, rolling ROI and deep-dive analytics"),
+    ("📐", "Odds Edge Analysis", "Actual vs implied win rate per league — by season and month"),
+    ("💧", "Price Leak Calculator", "Find where the ticks go between the tested price and the price you get"),
+    ("🔄", "Update Database", "Upload the monthly results file — every page refreshes"),
+]
+cols = st.columns(4)
+for i, (ico, title, desc) in enumerate(nav):
+    with cols[i % 4]:
+        st.markdown(
+            f'<div class="fts-card" style="margin-bottom:14px;min-height:112px">'
+            f'<div style="font-size:1.3rem">{ico} <span style="font-weight:700;font-size:1rem;vertical-align:middle">{title}</span></div>'
+            f'<div class="sub" style="margin-top:6px;line-height:1.4">{desc}</div></div>', unsafe_allow_html=True)

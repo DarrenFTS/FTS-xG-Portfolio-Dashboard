@@ -15,187 +15,59 @@ def hex_alpha(hex_color, alpha=0.67):
 
 
 st.set_page_config(page_title="Results Dashboard", page_icon="📉", layout="wide")
-st.markdown("""<style>
-/* Sidebar background */
-[data-testid="stSidebar"] { background: #0D2B55 !important; }
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))))
+import fts_ui as ui
+ui.apply_theme()
 
-/* Nuclear option — every element inside sidebar = white */
-[data-testid="stSidebar"],
-[data-testid="stSidebar"] *,
-[data-testid="stSidebarNav"],
-[data-testid="stSidebarNav"] *,
-[data-testid="stSidebarNavLink"],
-[data-testid="stSidebarNavLink"] *,
-[data-testid="stSidebarNavSeparator"],
-[data-testid="stSidebarNavSeparator"] *,
-section[data-testid="stSidebar"] a,
-section[data-testid="stSidebar"] a *,
-section[data-testid="stSidebar"] li,
-section[data-testid="stSidebar"] li *,
-section[data-testid="stSidebar"] span,
-section[data-testid="stSidebar"] p,
-section[data-testid="stSidebar"] div { color: #ffffff !important; }
+# ── System figures — calculated live from data/portfolio_master_sheet.json ────
+# (previously typed in by hand; now every upload of new results refreshes them)
+def _build_system_data():
+    df = ui.load_bets()
+    out = {}
+    for sys_name in ui.SYSTEM_ORDER:
+        s = df[df["system"] == sys_name].sort_values("date")
+        if s.empty:
+            continue
+        cum = s["pl"].cumsum().reset_index(drop=True)
+        dd = cum - cum.cummax()
+        trough = int(dd.idxmin())
+        peak_i = int(cum.iloc[:trough + 1].idxmax()) if trough > 0 else 0
+        dates = s["date"].reset_index(drop=True)
+        def _grp(col, label):
+            g = s.groupby(col).agg(pl=("pl", "sum"), bets=("pl", "size"),
+                                   avg_xg=("xg_value", "mean"), avg_odds=("odds", "mean")).reset_index()
+            g = g.rename(columns={col: label}).round({"pl": 2, "avg_xg": 3, "avg_odds": 3})
+            return g.to_dict("records")
+        comps = sorted(_grp("league", "Competition"), key=lambda r: -r["pl"])
+        out[sys_name] = {
+            "total_pl": round(float(s["pl"].sum()), 2), "total_bets": int(len(s)),
+            "max_dd": round(float(dd.min()), 2),
+            "dd_start": dates.iloc[peak_i].strftime("%Y-%m-%d"),
+            "dd_end": dates.iloc[trough].strftime("%Y-%m-%d"),
+            "avg_xg": round(float(s["xg_value"].mean()), 3),
+            "avg_odds": round(float(s["odds"].mean()), 3),
+            "color": ui.SYSTEM_COLORS[sys_name],
+            "seasons": _grp("season", "Season"),
+            "competitions": comps,
+        }
+    return out
 
-/* Page headings */
-h1, h2, h3, h4,
-.stMarkdown h1, .stMarkdown h2, .stMarkdown h3,
-[data-testid="stHeadingWithActionElements"] h1,
-[data-testid="stHeadingWithActionElements"] h2,
-[data-testid="stHeadingWithActionElements"] h3,
-div[class*="stHeading"] h1,
-div[class*="stHeading"] h2,
-div[class*="stHeading"] h3 { color: #ffffff !important; }
-</style>""", unsafe_allow_html=True)
-
-# ── Embedded historical data ──────────────────────────────────────────────────
-SYSTEM_DATA = {
-    "Lay U1.5": {
-        "total_pl": 226.01, "total_bets": 945, "max_dd": -19.0,
-        "dd_start": "2026-03-14", "dd_end": "2026-05-02",
-        "avg_xg": 4.203, "avg_odds": 4.588,
-        "color": "#58a6ff",
-        "seasons": [
-            {"Season":"2021-2022","pl":18.32,"bets":159,"avg_xg":4.221,"avg_odds":4.545},
-            {"Season":"2022-2023","pl":70.97,"bets":180,"avg_xg":4.193,"avg_odds":4.495},
-            {"Season":"2023-2024","pl":58.22,"bets":167,"avg_xg":4.153,"avg_odds":4.608},
-            {"Season":"2024-2025","pl":51.15,"bets":215,"avg_xg":4.203,"avg_odds":4.708},
-            {"Season":"2025-2026","pl":11.93,"bets":192,"avg_xg":4.254,"avg_odds":4.465},
-            {"Season":"2026-2027","pl":15.42,"bets":32, "avg_xg":4.118,"avg_odds":5.161},
-        ],
-        "competitions": [
-            {"Competition":"Belgian Premier League", "pl":45.27,"bets":178,"avg_xg":4.374,"avg_odds":4.864},
-            {"Competition":"Scottish Premiership",   "pl":44.64,"bets":361,"avg_xg":3.535,"avg_odds":4.186},
-            {"Competition":"Danish Superligaen",     "pl":33.70,"bets":113,"avg_xg":4.355,"avg_odds":4.838},
-            {"Competition":"Swedish Allsvenskan",    "pl":31.00,"bets":74, "avg_xg":4.634,"avg_odds":4.742},
-            {"Competition":"German Bundesliga 2",    "pl":28.54,"bets":89, "avg_xg":4.847,"avg_odds":5.099},
-            {"Competition":"Polish Ekstraklasa",     "pl":28.35,"bets":68, "avg_xg":5.009,"avg_odds":4.682},
-            {"Competition":"Italian Serie A",        "pl":14.51,"bets":62, "avg_xg":4.998,"avg_odds":4.669},
-        ],
-    },
-    "Back O2.5": {
-        "total_pl": 86.47, "total_bets": 569, "max_dd": -8.47,
-        "dd_start": "2023-10-28", "dd_end": "2023-11-25",
-        "avg_xg": 4.807, "avg_odds": 1.838,
-        "color": "#3fb950",
-        "seasons": [
-            {"Season":"2021-2022","pl":15.00,"bets":112,"avg_xg":4.892,"avg_odds":1.846},
-            {"Season":"2022-2023","pl":13.17,"bets":95, "avg_xg":4.758,"avg_odds":1.836},
-            {"Season":"2023-2024","pl":22.28,"bets":114,"avg_xg":4.872,"avg_odds":1.828},
-            {"Season":"2024-2025","pl":26.86,"bets":108,"avg_xg":4.789,"avg_odds":1.858},
-            {"Season":"2025-2026","pl":12.19,"bets":124,"avg_xg":4.728,"avg_odds":1.816},
-            {"Season":"2026-2027","pl":-3.03,"bets":16, "avg_xg":4.770,"avg_odds":1.891},
-        ],
-        "competitions": [
-            {"Competition":"Irish Premier League",    "pl":20.98,"bets":67, "avg_xg":4.522,"avg_odds":1.905},
-            {"Competition":"Spanish Primera Division","pl":16.16,"bets":166,"avg_xg":4.416,"avg_odds":1.880},
-            {"Competition":"English Championship",   "pl":13.04,"bets":55, "avg_xg":5.243,"avg_odds":1.908},
-            {"Competition":"Italian Serie A",        "pl":12.49,"bets":71, "avg_xg":4.999,"avg_odds":1.791},
-            {"Competition":"Polish Ekstraklasa",     "pl": 8.59,"bets":77, "avg_xg":5.046,"avg_odds":1.824},
-            {"Competition":"Portuguese Primeira Liga","pl": 8.41,"bets":62, "avg_xg":4.918,"avg_odds":1.825},
-            {"Competition":"Dutch Eredivisie",       "pl": 6.80,"bets":71, "avg_xg":5.103,"avg_odds":1.695},
-        ],
-    },
-    "Lay O3.5": {
-        "total_pl": 144.89, "total_bets": 968, "max_dd": -20.16,
-        "dd_start": "2022-03-14", "dd_end": "2022-05-08",
-        "avg_xg": 2.432, "avg_odds": 3.523,
-        "color": "#ffa657",
-        "seasons": [
-            {"Season":"2021-2022","pl":  1.15,"bets":188,"avg_xg":2.186,"avg_odds":3.735},
-            {"Season":"2022-2023","pl": 42.40,"bets":176,"avg_xg":2.342,"avg_odds":3.607},
-            {"Season":"2023-2024","pl":  7.36,"bets":144,"avg_xg":2.607,"avg_odds":3.342},
-            {"Season":"2024-2025","pl": 38.03,"bets":219,"avg_xg":2.315,"avg_odds":3.540},
-            {"Season":"2025-2026","pl": 64.80,"bets":211,"avg_xg":2.635,"avg_odds":3.434},
-            {"Season":"2026-2027","pl": -8.85,"bets":30, "avg_xg":3.084,"avg_odds":3.075},
-        ],
-        "competitions": [
-            {"Competition":"Belgian Premier League",  "pl":43.16,"bets":338,"avg_xg":1.568,"avg_odds":3.496},
-            {"Competition":"German Bundesliga 2",     "pl":25.64,"bets":128,"avg_xg":1.461,"avg_odds":3.252},
-            {"Competition":"Spanish Segunda Division","pl":23.65,"bets":78, "avg_xg":4.774,"avg_odds":3.558},
-            {"Competition":"English Championship",   "pl":21.91,"bets":151,"avg_xg":1.014,"avg_odds":4.468},
-            {"Competition":"Dutch Eerste Divisie",   "pl":15.25,"bets":125,"avg_xg":5.452,"avg_odds":2.331},
-            {"Competition":"Spanish Primera Division","pl":11.68,"bets":82, "avg_xg":0.950,"avg_odds":4.668},
-            {"Competition":"French Ligue 1",         "pl": 3.60,"bets":66, "avg_xg":5.330,"avg_odds":2.825},
-        ],
-    },
-    "FHG Lay U0.5": {
-        "total_pl": 165.82, "total_bets": 760, "max_dd": -21.12,
-        "dd_start": "2025-12-19", "dd_end": "2026-04-20",
-        "avg_xg": 2.802, "avg_odds": 4.056,
-        "color": "#bc8cff",
-        "seasons": [
-            {"Season":"2021-2022","pl":19.43,"bets":130,"avg_xg":2.816,"avg_odds":3.837},
-            {"Season":"2022-2023","pl":54.50,"bets":148,"avg_xg":2.783,"avg_odds":3.932},
-            {"Season":"2023-2024","pl":33.31,"bets":129,"avg_xg":2.818,"avg_odds":4.006},
-            {"Season":"2024-2025","pl":37.08,"bets":163,"avg_xg":2.819,"avg_odds":4.092},
-            {"Season":"2025-2026","pl":22.58,"bets":152,"avg_xg":2.811,"avg_odds":4.254},
-            {"Season":"2026-2027","pl":-1.08,"bets":38, "avg_xg":2.670,"avg_odds":4.509},
-        ],
-        "competitions": [
-            {"Competition":"Dutch Eredivisie",       "pl":42.45,"bets":190,"avg_xg":2.502,"avg_odds":4.455},
-            {"Competition":"Danish Superligaen",     "pl":29.36,"bets":60, "avg_xg":3.095,"avg_odds":4.001},
-            {"Competition":"Portuguese Primeira Liga","pl":27.44,"bets":113,"avg_xg":2.785,"avg_odds":3.980},
-            {"Competition":"Polish Ekstraklasa",     "pl":22.80,"bets":114,"avg_xg":2.726,"avg_odds":3.723},
-            {"Competition":"French Ligue 1",         "pl":16.65,"bets":71, "avg_xg":2.933,"avg_odds":3.969},
-            {"Competition":"German Bundesliga",      "pl":16.20,"bets":114,"avg_xg":2.989,"avg_odds":4.338},
-            {"Competition":"English Championship",   "pl":10.92,"bets":98, "avg_xg":3.000,"avg_odds":3.525},
-        ],
-    },
-    "Back the Draw": {
-        "total_pl": 162.91, "total_bets": 664, "max_dd": -30.09,
-        "dd_start": "2023-09-03", "dd_end": "2023-09-15",
-        "avg_xg": 0.387, "avg_odds": 3.992,
-        "color": "#4A90D9",
-        "seasons": [
-            {"Season":"2022-2023","pl": 39.86,"bets":175,"avg_xg":0.391,"avg_odds":3.988},
-            {"Season":"2023-2024","pl": 59.17,"bets":152,"avg_xg":0.388,"avg_odds":3.991},
-            {"Season":"2024-2025","pl": 74.14,"bets":153,"avg_xg":0.385,"avg_odds":3.994},
-            {"Season":"2025-2026","pl": -9.04,"bets":149,"avg_xg":0.383,"avg_odds":3.997},
-        ],
-        "competitions": [
-            {"Competition":"Scottish Premiership",   "pl":16.29,"bets":13, "avg_xg":0.412,"avg_odds":4.102},
-            {"Competition":"Italian Serie A",        "pl":24.73,"bets":27, "avg_xg":0.398,"avg_odds":4.210},
-            {"Competition":"Dutch Eredivisie",       "pl":40.73,"bets":51, "avg_xg":0.401,"avg_odds":4.185},
-            {"Competition":"Swiss Super League",     "pl":33.92,"bets":76, "avg_xg":0.389,"avg_odds":3.942},
-            {"Competition":"German Bundesliga",      "pl":16.40,"bets":61, "avg_xg":0.385,"avg_odds":3.972},
-            {"Competition":"German Bundesliga 2",    "pl":16.89,"bets":60, "avg_xg":0.382,"avg_odds":3.961},
-            {"Competition":"Dutch Eerste Divisie",   "pl":23.79,"bets":103,"avg_xg":0.378,"avg_odds":3.874},
-            {"Competition":"Belgian Premier League", "pl":13.96,"bets":73, "avg_xg":0.381,"avg_odds":3.891},
-            {"Competition":"English Premier League", "pl": 2.80,"bets":83, "avg_xg":0.376,"avg_odds":3.823},
-            {"Competition":"Polish Ekstraklasa",     "pl": 1.03,"bets":21, "avg_xg":0.373,"avg_odds":3.812},
-            {"Competition":"French Ligue 1",         "pl":-4.37,"bets":16, "avg_xg":0.368,"avg_odds":3.798},
-            {"Competition":"Spanish Primera Division","pl":-7.40,"bets":11,"avg_xg":0.362,"avg_odds":3.781},
-        ],
-    },
-}
+SYSTEM_DATA = _build_system_data()
 
 SYSTEMS = list(SYSTEM_DATA.keys())
 TOTAL_PL   = sum(d["total_pl"]   for d in SYSTEM_DATA.values())
 TOTAL_BETS = sum(d["total_bets"] for d in SYSTEM_DATA.values())
 WORST_DD   = min(d["max_dd"]     for d in SYSTEM_DATA.values())
-
-# ── Cumulative P&L series (from embedded HTML data) ───────────────────────────
-# Key points only — enough to draw accurate curves
-CUM_ENDPOINTS = {
-    "Lay U1.5":    {"start":"2021-07-23","end":"2026-10-31","final":226.01},
-    "Back O2.5":   {"start":"2021-08-16","end":"2026-10-31","final": 86.47},
-    "Lay O3.5":    {"start":"2021-07-27","end":"2026-10-31","final":144.89},
-    "FHG Lay U0.5":{"start":"2021-08-08","end":"2026-10-31","final":165.82},
-    "Back the Draw":{"start":"2022-08-07","end":"2026-09-30","final":162.91},
-}
+WORST_SYS  = min(SYSTEM_DATA, key=lambda k: SYSTEM_DATA[k]["max_dd"])
+N_PROFIT   = sum(1 for d in SYSTEM_DATA.values() if d["total_pl"] > 0)
+N_SEASONS  = ui.load_bets()["season"].nunique()
+CUM_ENDPOINTS = {k: {"final": v["total_pl"]} for k, v in SYSTEM_DATA.items()}
 
 # ── Load full bet-by-bet master sheet for accurate cum + drawdown ─────────────
-@st.cache_data
 def load_master_sheet():
-    import json, os
-    # pages/ -> dashboard/ -> repo root -> data/
-    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    path = os.path.join(repo_root, "data", "portfolio_master_sheet.json")
-    with open(path) as f:
-        records = json.load(f)
-    df = pd.DataFrame(records)
-    df["date"] = pd.to_datetime(df["date"])
-    return df.sort_values("date")
+    # shared loader — refreshes automatically when the data file is updated
+    return ui.load_bets().sort_values("date")
 
 def build_cum_curve(sys_name):
     """Return (dates, cum_pl, drawdown) from full bet-by-bet data."""
@@ -213,7 +85,7 @@ def build_cum_curve(sys_name):
 
 # ── Page header ───────────────────────────────────────────────────────────────
 st.title("📉 Results Dashboard")
-st.markdown("Historical performance across all 4 systems · 5 seasons · 2021–2026")
+st.markdown(f"Historical performance across 4 live systems + 1 test · {N_SEASONS} seasons · results to {ui.load_bets()['date'].max():%d %b %Y}")
 st.divider()
 
 # ── Tab navigation ────────────────────────────────────────────────────────────
@@ -228,9 +100,9 @@ with tab_overview:
     # KPI row
     c1, c2, c3, c4 = st.columns(4)
     c1.metric("💰 Total Portfolio P&L", f"+{TOTAL_PL:.2f} pts", "4 live systems + 1 test")
-    c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      "Across 5 seasons")
-    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  "Back the Draw")
-    c4.metric("✅ Systems Profitable",    "5 / 5",               "100% of systems in profit")
+    c2.metric("🎯 Total Bets",           f"{TOTAL_BETS:,}",      f"Across {N_SEASONS} seasons")
+    c3.metric("📉 Worst System DD",       f"{WORST_DD:.2f} pts",  WORST_SYS)
+    c4.metric("✅ Systems Profitable",    f"{N_PROFIT} / {len(SYSTEM_DATA)}", f"{N_PROFIT/len(SYSTEM_DATA):.0%} of systems in profit")
     st.divider()
 
     # System summary cards
@@ -269,11 +141,11 @@ with tab_overview:
         ))
     fig_all.add_hline(y=0, line_dash="dot", line_color="#30363d")
     fig_all.update_layout(
-        height=380, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+        height=380, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color="#e6edf3", size=12),
         xaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True),
         yaxis=dict(gridcolor="rgba(48,54,61,0.27)", showgrid=True, title="Cumulative P&L (pts)"),
-        legend=dict(bgcolor="#161b22", bordercolor="#30363d", borderwidth=1),
+        legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="#30363d", borderwidth=1),
         hovermode="x unified", margin=dict(t=20, b=40, l=60, r=20),
     )
     st.plotly_chart(fig_all, use_container_width=True)
@@ -292,7 +164,7 @@ with tab_overview:
             textposition="outside",
         ))
         fig_bar.update_layout(
-            height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            height=300, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color="#e6edf3"), showlegend=False,
             xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
             yaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="P&L (pts)"),
@@ -313,7 +185,7 @@ with tab_overview:
             textposition="outside",
         ))
         fig_dd.update_layout(
-            height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            height=300, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color="#e6edf3"), showlegend=False,
             xaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="Max Drawdown (pts)"),
             yaxis=dict(gridcolor="rgba(0,0,0,0)"),
@@ -333,9 +205,9 @@ with tab_overview:
             textinfo="label+percent",
         ))
         fig_pie.update_layout(
-            height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            height=300, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color="#e6edf3"),
-            legend=dict(bgcolor="#161b22", bordercolor="#30363d"),
+            legend=dict(bgcolor="rgba(0,0,0,0)", bordercolor="#30363d"),
             margin=dict(t=20, b=20, l=20, r=20),
         )
         st.plotly_chart(fig_pie, use_container_width=True)
@@ -352,7 +224,7 @@ with tab_overview:
             textposition="outside",
         ))
         fig_odds.update_layout(
-            height=300, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            height=300, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color="#e6edf3"), showlegend=False,
             xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
             yaxis=dict(gridcolor="rgba(48,54,61,0.27)", title="Avg Odds", range=[0, 6]),
@@ -432,7 +304,7 @@ def render_system_tab(tab, sys_name):
 
         fig_cum.update_layout(
             height=380,
-            plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+            plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
             font=dict(color="#e6edf3"),
             hovermode="x unified",
             showlegend=True,
@@ -507,7 +379,7 @@ def render_system_tab(tab, sys_name):
                 textposition="outside",
             ))
             fig_s.update_layout(
-                height=320, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+                height=320, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                 font=dict(color="#e6edf3"), showlegend=False,
                 xaxis=dict(gridcolor="rgba(48,54,61,0.27)", tickangle=0),
                 yaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
@@ -536,7 +408,7 @@ def render_system_tab(tab, sys_name):
                 textposition="outside",
             ))
             fig_c.update_layout(
-                height=320, plot_bgcolor="#0d1117", paper_bgcolor="#0d1117",
+                height=320, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                 font=dict(color="#e6edf3", size=11), showlegend=False,
                 xaxis=dict(gridcolor="rgba(48,54,61,0.27)"),
                 yaxis=dict(gridcolor="rgba(0,0,0,0)"),
